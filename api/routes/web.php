@@ -13,6 +13,14 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
+// $router->get('/', function () use ($router) {
+//     return $router->app->version();
+// });
+
+$router->group(['prefix' => 'teams'], function() use ($router){
+    $router->post('/add', ['uses' => 'TeamsController@addTeam']);
+});
+
+$router->group(['prefix' => 'user'], function() use ($router){
+    $router->get('/users', ['uses' => 'UsersController@getUsers']);
 });
