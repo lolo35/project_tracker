@@ -12,21 +12,53 @@ class TeamsController extends Controller {
             'members' => 'required'
         ]);
 
+        $teamId = Teams::max('teamId');
+        if(is_numeric($teamId)){
+            $teamId += 1;
+        }else{
+            $teamId = 1;
+        }
 
         $members = explode(",", $request['members']);
         try{
             foreach($members as $member){
-                $insert = new Teams();
-                $insert->team = $request['team'];
-                $insert->leader = $request['leader'];
-                $insert->members = $member;
-    
-                $insert->save();
+                if(strlen($member) > 0){
+                    $insert = new Teams();
+                    $insert->team = $request['team'];
+                    $insert->teamId = $teamId;
+                    $insert->leader = $request['leader'];
+                    $insert->members = $member;
+        
+                    $insert->save();
+                }
             }
-            return response()->json(array('success' => true), 200);
+            $newTeam = Teams::where('teamId', '=', $teamId)->get();
+            return response()->json(array('success' => true, 'team' => $newTeam), 200);
         } catch (Exception $e){
             return response()->json(array('success' => false, 'error' => $e), 200);
         }
         
+    }
+
+    public function getTeams(){
+        try {
+            $data = Teams::get();
+            return response()->json(array('success' => true, 'data' => $data), 200);
+        } catch (Exception $e) {
+            return response()->json(array('success' => false, 'error' => $e), 200);
+        }
+    }
+
+    public function deleteTeam(Request $request){
+        $this->validate($request, [
+            'teamId' => 'required'
+        ]);
+
+        try {
+            Teams::where('teamId', '=', $request['teamId'])->delete();
+            return response()->json(array('success' => true), 200);
+        } catch (Exception $e){
+            return response()->json(array('success' => false, 'error' => $e), 200);
+        }
     }
 }

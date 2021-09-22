@@ -6,25 +6,19 @@
         <toolbar></toolbar>
     </div>
     <Table></Table>
-    <add-team-modal v-if="teams.showModal"></add-team-modal>
 </template>
 
 <script>
 import Table from '@/components/Teams/Table.vue';
-import AddTeamModal from '@/components/Teams/AddTeamModal.vue';
 import Toolbar from '@/components/Teams/Toolbar.vue';
-import { mapState } from 'vuex';
+
 
 export default {
     name: "Teams",
     components: {
         Table,
-        AddTeamModal,
         Toolbar,
     },
-    computed: {
-        ...mapState(['teams']),
-    }
 }
 </script>
 

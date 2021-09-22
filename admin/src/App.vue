@@ -1,10 +1,37 @@
 <template>
-	<div id="nav">
-    
-	</div>
 	<router-view/>
 </template>
 
+<script>
+import localforage from 'localforage';
+
+export default {
+	name: "App",
+	created(){
+		this.checkIfLogged();
+	},
+	methods: {
+		checkIfLogged(){
+			if(!this.$store.state.isLogged){
+				localforage.getItem('userId').then(value => {
+					if(!value){
+						this.$router.push('/login');
+					}else{
+						this.$store.dispatch('setIsLogged');
+						this.$store.dispatch('user/setUserId', value);
+						localforage.getItem('name').then(value => {
+							this.$store.dispatch('user/setName', value);
+						});
+						localforage.getItem('email').then( value => {
+							this.$store.dispatch('user/setEmail', value)
+						});
+					}
+				});
+			}
+		}
+	}
+}
+</script>
 <style>
 
 </style>

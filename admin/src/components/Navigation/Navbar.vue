@@ -10,7 +10,7 @@
             </div>
         </nav>
         <div class="w-8 h-8 cursor-pointer">
-            <img class="rounded-full" :src="`${url}images/no-photo.jpg`" alt="user">
+            <img class="rounded-full" :src="`${url}images/no-photo.jpg`" alt="user" :title="$store.state.user.name">
         </div>
     </header>
 </template>

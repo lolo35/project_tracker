@@ -16,6 +16,7 @@ class Teams extends Migration
         //
         Schema::create('teams', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->integer('teamId');
             $table->string('team');
             $table->string('leader');
             $table->string('members');

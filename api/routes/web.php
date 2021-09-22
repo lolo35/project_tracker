@@ -19,8 +19,11 @@
 
 $router->group(['prefix' => 'teams'], function() use ($router){
     $router->post('/add', ['uses' => 'TeamsController@addTeam']);
+    $router->get('/', ['uses' => 'TeamsController@getTeams']);
+    $router->post('/delete', ['uses' => "TeamsController@deleteTeam"]);
 });
 
 $router->group(['prefix' => 'user'], function() use ($router){
     $router->get('/users', ['uses' => 'UsersController@getUsers']);
+    $router->post('/login', ['uses' => 'UsersController@validateLogin']);
 });
