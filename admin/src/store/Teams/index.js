@@ -6,6 +6,7 @@ export default {
         users: [],
         teamMembers: [],
         teamLeader: "",
+        teamLeaderId: "",
         teams: {},
         teamRows: 2,
     },
@@ -31,8 +32,15 @@ export default {
                 state.teamMembers.push(value);
             }
         },
-        setTeamLeader(state, value){            
-            state.teamLeader = state.teamMembers[value];
+        setTeamLeader(state, value){
+            for(let i = 0; i < state.users.length; i++){
+                if(state.teamMembers[value] === state.users[i].id){
+                    state.teamLeader = state.users[i].name;
+                    state.teamLeaderId = state.users[i].id;
+                    break;
+                }
+            }            
+            //state.teamLeader = state.teamMembers[value];
         },
         removeTeamLeader(state){
             state.teamLeader = "";

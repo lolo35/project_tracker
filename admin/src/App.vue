@@ -16,6 +16,7 @@ export default {
 				localforage.getItem('userId').then(value => {
 					if(!value){
 						this.$router.push('/login');
+						this.$store.dispatch('user/setUserLoaded', false);
 					}else{
 						this.$store.dispatch('setIsLogged');
 						this.$store.dispatch('user/setUserId', value);
@@ -25,6 +26,7 @@ export default {
 						localforage.getItem('email').then( value => {
 							this.$store.dispatch('user/setEmail', value)
 						});
+						this.$store.dispatch('user/setUserLoaded', true);
 					}
 				});
 			}

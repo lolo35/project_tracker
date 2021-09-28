@@ -2,9 +2,9 @@
     <tr>
         <td class="px-4 py-2 whitespace-nowrap border-r" :rowspan="members.length">
             <div class="flex flex-row items-center space-x-2">
-                <button class="text-red-500 hover:text-red-700" @click="deleteTeam()">
+                <!-- <button class="text-red-500 hover:text-red-700" @click="deleteTeam()">
                     <i class="fas fa-trash-alt"></i>
-                </button>
+                </button> -->
                 <p class="text-xl">{{ team }}</p>
             </div>
             

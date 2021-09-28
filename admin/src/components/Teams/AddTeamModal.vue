@@ -17,13 +17,13 @@
                 <div class="w-full sm:w-72" v-for="(index, n) in $store.state.teams.teamRows" :key="n">
                     <div class="w-full flex justify-between">
                         <p class="mb-2 font-semibold text-gray-700">Team member</p>
-                        <button type="button" @click="$store.dispatch('teams/setTeamLeader', index)" :class="{'text-blue-500': $store.state.teams.teamMembers[index] === $store.state.teams.teamLeader}">
+                        <button type="button" @click="$store.dispatch('teams/setTeamLeader', index)" :class="{'text-blue-500': $store.state.teams.teamMembers[index] === $store.state.teams.teamLeaderId}">
                             <i class="fas fa-crown"></i>
                         </button>
                     </div>
                     <select id="" v-model="teamMember[index]" class="w-full p-5 bg-white border border-gray-200 rounded shadow-sm appearance-none">
                         <option value="" selected></option>
-                        <option :value="user.name" v-for="user in teams.users" :key="user.id">{{ user.name }}</option>
+                        <option :value="user.id" v-for="user in teams.users" :key="user.id">{{ user.name }}</option>
                     </select>
                 </div>
             </div>
@@ -88,6 +88,7 @@ export default {
             formData.append('team', this.$store.state.teams.teamName);
             formData.append('leader', this.$store.state.teams.teamLeader);
             formData.append('members', this.$store.state.teams.teamMembers);
+            formData.append('leaderId', this.$store.state.teams.teamLeaderId);
             try {
                 await axios.post(`${this.$store.state.url}teams/add`, formData, {
                     headers: {
@@ -97,7 +98,9 @@ export default {
                     console.log(response.data);
                     this.$store.dispatch('teams/resetTeamRows');
                     if(response.data.success){
-                        this.$store.dispatch('teams/setTeams', response.data.team);
+                        //this.$store.dispatch('teams/setTeams', response.data.team);
+                        this.$store.dispatch('team/setTeam', true);
+                        this.$store.dispatch('teams/setShowModal');
                     }
                 });
             }catch(error){

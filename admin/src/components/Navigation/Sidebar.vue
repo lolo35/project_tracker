@@ -23,7 +23,15 @@
                 </div>
                 <div class="bg-gray-900 text-white p-2 rounded mt-2 cursor-pointer hover:bg-gray-700 hover:text-blue-300">Releases</div>
                 <div class="bg-gray-900 text-white p-2 rounded mt-2 cursor-pointer hover:bg-gray-700 hover:text-blue-300">Components</div>
-                <div class="bg-gray-900 text-white p-2 rounded mt-2 cursor-pointer hover:bg-gray-700 hover:text-blue-300">Repository</div>
+                <router-link to="/team">
+                    <div 
+                        class="p-2 rounded mt-2 cursor-pointer hover:bg-gray-700 hover:text-blue-300"
+                        :class="{'bg-gray-900 text-white': !team, 'bg-gray-700 text-blue-300': team}"
+                        >
+                        My team
+                    </div>
+                </router-link>
+                
             </div>
             <div class="flex p-3 text-white bg-red-500 rounded cursor-pointer text-center text-sm">
                 <button class="rounded inline-flex items-center">
@@ -44,6 +52,9 @@ export default {
         },
         teams(){
             return this.$route.name === "Teams" ? true : false;
+        },
+        team(){
+            return this.$route.name === "Team" ? true : false;
         }
     }
 }

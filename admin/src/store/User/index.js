@@ -4,6 +4,7 @@ export default {
         name: "",
         email: "",
         userId: "",
+        userLoaded: false,
     },
     mutations: {
         setName(state, value){
@@ -14,6 +15,9 @@ export default {
         },
         setUserId(state, value){
             state.userId = value;
+        },
+        setUserLoaded(state, value){
+            state.userLoaded = value;
         }
     },
     actions: {
@@ -25,6 +29,9 @@ export default {
         },
         setUserId({ commit }, value){
             commit('setUserId', value);
+        },
+        setUserLoaded({ commit }, value){
+            commit("setUserLoaded", value);
         }
     },
     getters: {

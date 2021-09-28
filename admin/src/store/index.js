@@ -3,6 +3,7 @@ import navigation from './Navigation/index';
 import teams from './Teams/index';
 import login from './Login/index';
 import user from './User/index';
+import team from './Team/index';
 
 export default createStore({
   state: {
@@ -24,6 +25,7 @@ export default createStore({
     teams,
     login,
     user,
+    team,
   },
   getters: {
 

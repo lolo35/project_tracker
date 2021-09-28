@@ -4,6 +4,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Teams extends Model {
     protected $table = "teams";
-    protected $fillable = ['teamId', 'team', 'leader', 'members'];
+    protected $fillable = ['teamId', 'team', 'leader', 'leaderId', 'members', 'memberId'];
     protected $hidden = [];
 }
