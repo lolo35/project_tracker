@@ -19,6 +19,7 @@ class Users extends Migration
             $table->string('name');
             $table->string('email');
             $table->string('password');
+            $table->string('autoliv_id');
             $table->timestamps();
         });
     }

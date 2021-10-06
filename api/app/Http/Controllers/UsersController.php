@@ -20,7 +20,7 @@ class UsersController extends Controller {
             if(!empty($user)){
                 $rpass = hash('sha512', $request['pass']);
                 if($rpass === $user[0]['password']){
-                    $userInfo = ['id' => $user[0]['id'], 'name' => $user[0]['name'], 'email' => $user[0]['email']];
+                    $userInfo = ['id' => $user[0]['id'], 'name' => $user[0]['name'], 'email' => $user[0]['email'], 'autoliv_id' => $user[0]['autoliv_id']];
                     return response()->json(array('success' => true, 'user' => $userInfo), 200);
                 }
             }

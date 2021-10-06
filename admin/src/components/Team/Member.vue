@@ -14,7 +14,7 @@
         </div>
     </div>
     <div class="flex flex-row text-white">
-        
+        <div class="flex h-1 bg-green-500 rounded justify-center text-sm" :style="`width: ${percentDone}%`"></div>
     </div>
     <div class="flex items-center">
         <label for="addtask" class="text-white font-semibold">Add task</label>
@@ -25,7 +25,7 @@
             <i class="fas fa-check"></i>
         </button>
     </form>
-    <transition name="dropdown" enter-active-class="animate__animated animate__fadeIn" leave-active-class="animate__animated animate__fadeOut">
+    <transition name="dropdown" enter-active-class="animate__animated animate__fadeIn" leave-active-class="animate__animated animate__fadeOut animate__faster">
         <div v-if="showTasks">
             <div class="flex items-center justify-between">
                 <h3 class="text-lg font-semibold text-gray-200">Tasks</h3>
@@ -39,6 +39,11 @@
                     <i class="fas fa-trash-alt"></i>
                 </button>
             </div>
+            
+            <div class="flex flex-row bg-yellow-50 text-yellow-500 px-6 py-3 border-l-8 border-yellow-600" v-if="tasks.length == 0">
+                Looks like you don't have any tasks, add some using the input above
+            </div>
+
         </div>
     </transition>    
 </template>
@@ -55,6 +60,7 @@ export default {
             task: "",
             tasks: Array,
             showTasks: false,
+            tasksLoaded: false,
         }
     },
     props: {
@@ -97,8 +103,10 @@ export default {
         async fetchTasks(){
             try {
                 const response = await axios.get(`${this.$store.state.url}user/tasks?userId=${this.userId}`);
+                console.log(response.data);
                 if(response.data.success){
                     this.tasks = response.data.data.reverse();
+                    this.tasksLoaded = true;
                 }
             } catch (error){
                 console.error(error);
@@ -137,13 +145,14 @@ export default {
             let formData = new FormData();
             formData.append('userId', this.userId);
             formData.append('task', this.task);
+            formData.append('name', this.name);
 
             axios.post(`${this.$store.state.url}user/addTask`, formData, {
                 headers: {
                     'Content-type': 'application/x-www-form-urlencoded',
                 }
             }).then(response => {
-                //console.log(response.data);
+                console.log(response.data);
                 if(response.data.success){
                     this.task = "";
                     this.tasks.unshift(response.data.data);
@@ -169,24 +178,24 @@ export default {
     computed: {
         completedTasks(){
             let done = 0;
-            if(this.tasks.length > 0){
+            if(this.tasksLoaded){
                 for(let i = 0; i < this.tasks.length; i++){
-                    if(this.tasks[i].status == 1){
+                    if(this.tasks[i].status == "1"){
                         done++;
                     }
                 }
-            }
+            }            
             return done;
         },
-        // unfinishedTasks(){
-        //     let inWork = 0;
-        //     for(let i = 0; i < this.tasks.length; i++){
-        //         if(this.tasks[i].status == 0){
-        //             inWork++;
-        //         }
-        //     }
-        //     return inWork;
-        // },
+        unfinishedTasks(){
+            let inWork = 0;
+            for(let i = 0; i < this.tasks.length; i++){
+                if(this.tasks[i].status == 0){
+                    inWork++;
+                }
+            }
+            return inWork;
+        },
         percentDone(){
             return (this.completedTasks / this.tasks.length) * 100;
         }

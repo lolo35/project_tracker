@@ -19,7 +19,9 @@ class Tasks extends Migration
             $table->integer("userId");
             $table->string('task');
             $table->integer('status');
+            $table->integer('dispatch_id');
             $table->date('due')->nullable();
+            $table->integer('minutesSpent');
             $table->timestamps();
         });
     }

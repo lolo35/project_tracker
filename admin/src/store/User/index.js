@@ -4,6 +4,7 @@ export default {
         name: "",
         email: "",
         userId: "",
+        autoliv_id: "",
         userLoaded: false,
     },
     mutations: {
@@ -18,6 +19,9 @@ export default {
         },
         setUserLoaded(state, value){
             state.userLoaded = value;
+        },
+        setAutolivId(state, value){
+            state.autoliv_id = value;
         }
     },
     actions: {
@@ -32,6 +36,9 @@ export default {
         },
         setUserLoaded({ commit }, value){
             commit("setUserLoaded", value);
+        },
+        setAutolivId({ commit }, value){
+            commit('setAutolivId', value);
         }
     },
     getters: {

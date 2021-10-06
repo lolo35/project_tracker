@@ -99,6 +99,10 @@ export default {
                     localforage.setItem('userId', response.data.user.id).then(value => {
                         this.$store.dispatch('user/setUserId', value);
                     });
+                    localforage.setItem('autoliv_id', response.data.user.autoliv_id).then(value => {
+                        this.$store.dispatch('user/setAutolivId', value);
+                    });
+                    this.$router.push('/');
                 }
             } catch(error){
                 console.error(error);

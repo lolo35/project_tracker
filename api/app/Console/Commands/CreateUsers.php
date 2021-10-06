@@ -24,6 +24,7 @@ class CreateUsers extends Command {
             $insert->name = $user;
             $insert->email = $email;
             $insert->password = $password;
+            $insert->autoliv_id = "TRO07513";
 
             $insert->save();
             $bar->advance();

@@ -99,6 +99,7 @@ export default {
                     this.$store.dispatch('teams/resetTeamRows');
                     if(response.data.success){
                         //this.$store.dispatch('teams/setTeams', response.data.team);
+                        this.$store.dispatch('team/setTeamComp', response.data.team);
                         this.$store.dispatch('team/setTeam', true);
                         this.$store.dispatch('teams/setShowModal');
                     }

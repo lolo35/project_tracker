@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
         //
         Commands\CreateUsers::class,
         Commands\FizzBuzz::class,
+        Commands\DateTimeDiff::class,
     ];
 
     /**

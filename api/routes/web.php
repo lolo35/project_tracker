@@ -24,6 +24,7 @@ $router->group(['prefix' => 'teams'], function() use ($router){
     $router->get("/team", ["uses" => "TeamsController@getMyTeam"]);
     $router->post('/addTeamMember', ['uses' => "TeamsController@addTeamMember"]);
     $router->post("/removeTeamMember", ['uses' => "TeamsController@deleteTeamMember"]);
+    $router->get('/workingTasks', ['uses' => "TasksController@currentlyWorkingTasks"]);
 });
 
 $router->group(['prefix' => 'user'], function() use ($router){
@@ -33,4 +34,10 @@ $router->group(['prefix' => 'user'], function() use ($router){
     $router->post('/addTask', ['uses' => "TasksController@addTask"]);
     $router->post('/updateTask', ['uses' => "TasksController@updateTask"]);
     $router->post('/deleteTask', ['uses' => "TasksController@deleteTask"]);
+    $router->post('/toggleTask', ['uses' => "TasksController@toggleTask"]);
+});
+
+$router->group(['prefix' => 'projects'], function() use($router) {
+    $router->get('/', ['uses' => "ProjectsController@getProjects"]);
+    $router->post('/addProject', ['uses' => "ProjectsController@addProject"]);
 });

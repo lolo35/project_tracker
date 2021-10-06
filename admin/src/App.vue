@@ -26,6 +26,9 @@ export default {
 						localforage.getItem('email').then( value => {
 							this.$store.dispatch('user/setEmail', value)
 						});
+						localforage.getItem('autoliv_id').then(value => {
+							this.$store.dispatch('user/setAutolivId', value);
+						})
 						this.$store.dispatch('user/setUserLoaded', true);
 					}
 				});

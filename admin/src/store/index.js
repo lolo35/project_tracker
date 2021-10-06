@@ -4,6 +4,7 @@ import teams from './Teams/index';
 import login from './Login/index';
 import user from './User/index';
 import team from './Team/index';
+import projects from './Projects/index';
 
 export default createStore({
   state: {
@@ -26,6 +27,7 @@ export default createStore({
     login,
     user,
     team,
+    projects,
   },
   getters: {
 
