@@ -8,6 +8,7 @@
             :project="project.name" 
             :description="project.description" 
             :key="project.id"
+            :projectId="project.id"
             :owner="project.owner"
         ></project-card>
     </div>

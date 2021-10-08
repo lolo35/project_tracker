@@ -12,11 +12,12 @@ class TasksController extends Controller {
 
     public function getTasks(Request $request){
         $this->validate($request, [
-            'userId' => 'required'
+            'userId' => 'required',
+            'projectId' => 'required',
         ]);
 
         try {
-            $data = TasksModel::where('userId', '=', $request['userId'])->get();
+            $data = TasksModel::where('userId', '=', $request['userId'])->where('project_id', '=', $request['projectId'])->get();
             return response()->json(array('success' => true, 'data' => $data), 200);
         } catch (Exception $e){
             return response()->json(array('success' => false, 'error' => $e), 200);
@@ -41,6 +42,7 @@ class TasksController extends Controller {
             'userId' => 'required',
             'task' => 'required',
             'name' => 'required',
+            'projectId' => 'required',
         ]);
 
         $autolivId = User::where('id', '=', $request['userId'])->get();
@@ -77,6 +79,7 @@ class TasksController extends Controller {
                 if($resp['success']){
                     try {
                         $insert = new TasksModel();
+                        $insert->project_id = $request['projectId'];
                         $insert->userId = $request['userId'];
                         $insert->task = $request['task'];
                         $insert->status = 0;

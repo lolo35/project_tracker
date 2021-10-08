@@ -37,6 +37,7 @@ export default {
                 console.log(response.data);
                 if(response.data.success){
                     this.$emit('updateTask', this.id);
+                    localforage.removeItem(this.id.toString());
                 }
             } catch(error){
                 console.error(error);

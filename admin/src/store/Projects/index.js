@@ -1,3 +1,5 @@
+import details from './details';
+
 export default {
     namespaced: true,
     state: {
@@ -45,5 +47,8 @@ export default {
             }
             return state.projects;        
         }
+    },
+    modules: {
+        details,
     }
 }

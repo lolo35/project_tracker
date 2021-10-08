@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Tasks extends Migration
+class RecurringTasks extends Migration
 {
     /**
      * Run the migrations.
@@ -14,15 +14,15 @@ class Tasks extends Migration
     public function up()
     {
         //
-        Schema::create('tasks', function (Blueprint $table) {
+        Schema::create('recurring_tasks', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('project_id');
-            $table->integer("userId");
+            $table->integer("user_id");
             $table->string('task');
             $table->integer('status');
-            $table->integer('dispatch_id');
-            $table->date('due')->nullable();
-            $table->integer('minutesSpent');
+            $table->string('description')->nullable();
+            $table->string('recurring');
+            $table->integer('dispatch_id')->nullable();
+            $table->string('when')->nullable();
             $table->timestamps();
         });
     }
@@ -35,6 +35,6 @@ class Tasks extends Migration
     public function down()
     {
         //
-        Schema::dropIfExists('tasks');
+        Schema::dropIfExists('recurring_tasks');
     }
 }

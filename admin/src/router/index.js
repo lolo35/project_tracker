@@ -36,6 +36,14 @@ const routes = [
         components: {
           home: () => import('../views/Projects.vue')
         }
+      },
+      {
+        name: "ProjectDetails",
+        path: "/projectDetails/:id",
+        components: {
+          home: () => import('../views/ProjectDetails.vue'),
+        },
+        props: true,
       }
     ]
   },

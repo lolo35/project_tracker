@@ -40,4 +40,13 @@ $router->group(['prefix' => 'user'], function() use ($router){
 $router->group(['prefix' => 'projects'], function() use($router) {
     $router->get('/', ['uses' => "ProjectsController@getProjects"]);
     $router->post('/addProject', ['uses' => "ProjectsController@addProject"]);
+    $router->get('/projectStats', ['uses' => "ProjectsController@percentDone"]);
+    $router->get('/projectDetails', ['uses' => "ProjectsController@getTasksForProject"]);
+});
+
+$router->group(['prefix' => 'recurring'], function () use($router){
+    $router->get('/', ['uses' => "RecurringTasksController@getTasks"]);
+    $router->get('/dailyTasks', ['uses' => "RecurringTasksController@getDailyTasks"]);
+    $router->post('/addTask', ['uses' => 'RecurringTasksController@addTask']);
+    $router->post('/deleteTask', ['uses' => 'RecurringTasksController@deleteTask']);
 });

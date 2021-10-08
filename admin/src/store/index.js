@@ -5,6 +5,7 @@ import login from './Login/index';
 import user from './User/index';
 import team from './Team/index';
 import projects from './Projects/index';
+import dailyTasks from './RecurringTasks/dailyTasks';
 
 export default createStore({
   state: {
@@ -28,6 +29,7 @@ export default createStore({
     user,
     team,
     projects,
+    dailyTasks,
   },
   getters: {
 
