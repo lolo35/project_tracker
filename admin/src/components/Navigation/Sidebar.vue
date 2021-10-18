@@ -14,7 +14,7 @@
                     <div 
                         :class="{'bg-gray-700 text-blue-300': main, 'bg-gray-900 text-white': !main}"
                         class="p-2 rounded mt-2 cursor-pointer hover:bg-gray-700 hover:text-blue-300">
-                        Board
+                        Ongoing
                     </div>
                 </router-link>                
                 <div class="bg-gray-900 flex justify-between items-center text-white p-2 rounded mt-2 cursor-pointer hover:bg-gray-700 hover:text-blue-300">

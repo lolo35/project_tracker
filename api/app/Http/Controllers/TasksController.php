@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 use App\Models\TasksModel;
+use App\Models\RecurringTasksModel;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -30,7 +31,16 @@ class TasksController extends Controller {
                 ->join('users', 'users.id', '=', 'tasks.userId')
                 ->select('tasks.*', 'users.name', 'users.email', 'users.autoliv_id')
                 ->where('tasks.status', '=', 2)
-                ->get();
+                ->get()
+                ->toArray();
+            $recurring = DB::table('recurring_tasks')
+                ->join('users', 'users.id', '=', 'recurring_tasks.user_id')
+                ->select('recurring_tasks.*', 'users.name', 'users.email', 'users.autoliv_id')
+                ->where('recurring_tasks.status', '=', 2)
+                ->get()
+                ->toArray();
+            
+            $data = array_merge($data, $recurring);
             return response()->json(array('success' => true, 'data' => $data), 200);
         } catch (Exception $e){
             return response()->json(array('success' => false, 'error' => $e), 200);

@@ -44,6 +44,13 @@ const routes = [
           home: () => import('../views/ProjectDetails.vue'),
         },
         props: true,
+      },
+      {
+        name: "DiscusionBoard",
+        path: "/discustionboard",
+        components: {
+          home: () => import('../views/DiscutionBoards.vue')
+        },
       }
     ]
   },

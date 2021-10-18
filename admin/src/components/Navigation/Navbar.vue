@@ -6,7 +6,7 @@
                 <a href="" class="bg-gray-900 hover:bg-gray-700 p-2 rounded cursor-pointer">Dashboard</a>
                 <router-link to="/projects" class="bg-gray-900 hover:bg-gray-700 p-2 rounded cursor-pointer ml-1">Projects</router-link>
                 <a href="" class="bg-gray-900 hover:bg-gray-700 p-2 rounded cursor-pointer ml-1">Issues</a>
-                <a href="" class="bg-gray-900 hover:bg-gray-700 p-2 rounded cursor-pointer ml-1">Boards</a>
+                <router-link to="/discustionboard"  class="bg-gray-900 hover:bg-gray-700 p-2 rounded cursor-pointer ml-1">Boards</router-link>
             </div>
         </nav>
         <div class="w-8 h-8 cursor-pointer">
