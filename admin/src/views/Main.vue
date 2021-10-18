@@ -1,5 +1,8 @@
 <template>
     <div class="flex">Dashboard</div>
+    <div class="flex flex-row">
+        
+    </div>
     <div class="flex flex-col">
         <div class="-my-2 overflow-x-auto">
             <div class="py-2 inline-block align-middle min-w-full sm:px-6 lg:px-8">

@@ -49,4 +49,6 @@ $router->group(['prefix' => 'recurring'], function () use($router){
     $router->get('/dailyTasks', ['uses' => "RecurringTasksController@getDailyTasks"]);
     $router->post('/addTask', ['uses' => 'RecurringTasksController@addTask']);
     $router->post('/deleteTask', ['uses' => 'RecurringTasksController@deleteTask']);
+    $router->post('/activateTask', ['uses' => 'RecurringTasksController@activateTask']);
+    $router->post('/completeTask', ['uses' => 'RecurringTasksController@completeTask']);
 });

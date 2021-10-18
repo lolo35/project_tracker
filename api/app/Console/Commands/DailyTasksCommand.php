@@ -2,6 +2,7 @@
 namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\RecurringTasksModel;
+use App\Models\StartedTasks;
 use Requests;
 use DateTime;
 use Throwable;
@@ -16,7 +17,12 @@ class DailyTasksCommand extends Command {
     }
 
     public function handle(){
-        $data = RecurringTasksModel::where('recurring', '=', 'daily')->get()->toArray();
+        $startedTasks = StartedTasks::where('timeframe', '=', 'daily')->get('task_id')->toArray();
+        $startedTaskIds = array();
+        foreach($startedTasks as $startedTask){
+            $startedTaskIds[] = $startedTask['task_id'];
+        }
+        $data = RecurringTasksModel::where('recurring', '=', 'daily')->whereNotIn('id', $startedTaskIds)->get()->toArray();
         foreach($data as $task){
             $taskDesc = "Daily task: " . $task['task'];
             try {
@@ -47,7 +53,14 @@ class DailyTasksCommand extends Command {
                     $l2l_request = Requests::post($url, $headers, $options);
                     $resp = json_decode($l2l_request->body, true);
                     if($resp['success']){
-                        RecurringTasksModel::where('id', '=', $task['id'])->update(['dispatch_id' => $response['data']['id']]);
+                        RecurringTasksModel::where('id', '=', $task['id'])->update(['dispatch_id' => $response['data']['id'], 'status' => 0]);
+                        $startTask = new StartedTasks();
+                        $startTask->dispatch_id = $response['data']['id'];
+                        $startTask->user_id = $task['user_id'];
+                        $startTask->task_id = $task['id'];
+                        $startTask->timeframe = "daily";
+                        $startTask->minutesSpent = 0;
+                        $startTask->save();
                         $this->info($task['task'] . " -  success");
                     }else{
                         $this->error($resp['error']);
