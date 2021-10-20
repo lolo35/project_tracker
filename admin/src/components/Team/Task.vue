@@ -32,8 +32,8 @@ export default {
     },
     methods: {
         async updateTask(){
-            let status = this.status == 0 ? 1 : 0;
-            
+            let status = this.activeStatus ? 1 : 0;
+            console.log(status);
             try {
                 const response = await axios.post(`${this.$store.state.url}user/updateTask?id=${this.id}&status=${status}`);
                 console.log(response.data);
@@ -73,7 +73,7 @@ export default {
     },
     computed: {
         statusComputed(){
-            return this.status === 1 ? true : false;            
+            return this.status === 1 ? true : false;
         },
         userCheck(){
             if(this.$store.state.user.userId === this.userId){

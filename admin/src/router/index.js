@@ -17,6 +17,13 @@ const routes = [
         }
       },
       {
+        name: "Recurring",
+        path: '/recurring',
+        components: {
+          home: () => import('../views/RecurringTasks.vue')
+        }
+      },
+      {
         name: "Teams",
         path: '/teams',
         components: {

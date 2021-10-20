@@ -16,6 +16,14 @@
                         class="p-2 rounded mt-2 cursor-pointer hover:bg-gray-700 hover:text-blue-300">
                         Ongoing
                     </div>
+                </router-link>
+                <router-link to="/recurring">
+                    <div 
+                        :class="{'bg-gray-700 text-blue-300': recurring, 'bg-gray-900 text-white': !recurring}"
+                        class="p-2 rounded mt-2 cursor-pointer hover:bg-gray-700 hover:text-blue-300"
+                        >
+                        Recurring Tasks    
+                    </div>    
                 </router-link>                
                 <div class="bg-gray-900 flex justify-between items-center text-white p-2 rounded mt-2 cursor-pointer hover:bg-gray-700 hover:text-blue-300">
                     <span>Reports</span>
@@ -68,6 +76,9 @@ export default {
         },
         team(){
             return this.$route.name === "Team" ? true : false;
+        },
+        recurring(){
+            return this.$route.name === "Recurring" ? true : false;
         }
     }
 }

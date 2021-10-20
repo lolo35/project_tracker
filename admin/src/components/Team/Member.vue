@@ -282,14 +282,15 @@ export default {
             }
         },
         updateTaskStatus(taskId){
-            //console.log(taskId);
+            taskId = parseInt(taskId);
+            console.log(taskId);
             for(let i = 0; i < this.tasks.length; i++){
                 if(taskId === this.tasks[i].id){
-                    if(this.tasks[i].status == 0){
-                        this.tasks[i].status = 1;
-                    }else{
-                        this.tasks[i].status = 0;
-                    }
+                    // if(this.tasks[i].status == 0){
+                    this.tasks[i].status = 1;
+                    // }else{
+                    //     this.tasks[i].status = 0;
+                    // }
                     break;
                 }
             }

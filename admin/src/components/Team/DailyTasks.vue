@@ -67,7 +67,7 @@ export default {
             const response = await axios.post(`${this.$store.state.url}recurring/activateTask`, formData, { headers: { 'Content-type': 'application/x-www-form-urlencoded'}});
             if(response.data.success){
                 this.activeStatus = !this.activeStatus;
-                localforage.setItem(`recurringTask-${this.task.id}`, true);
+                localforage.setItem(`recurringTask-${this.task.id}`, this.activeStatus);
             }else{
                 console.log(response.data);
             }
