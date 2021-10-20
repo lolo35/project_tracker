@@ -102,6 +102,8 @@ export default {
                     localforage.setItem('autoliv_id', response.data.user.autoliv_id).then(value => {
                         this.$store.dispatch('user/setAutolivId', value);
                     });
+                    this.$store.dispatch('setIsLogged');
+                    this.$store.dispatch('user/setUserLoaded', true);
                     this.$router.push('/');
                 }
             } catch(error){

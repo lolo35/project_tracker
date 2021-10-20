@@ -33,19 +33,32 @@
                 </router-link>
                 
             </div>
-            <div class="flex p-3 text-white bg-red-500 rounded cursor-pointer text-center text-sm">
-                <button class="rounded inline-flex items-center">
+            <button class="flex p-3 text-white bg-red-500 rounded cursor-pointer text-center text-sm" @click="logout()">
+                <div class="rounded inline-flex items-center">
                     <i class="fas fa-sign-out-alt"></i>
                     <span class="font-semibold">Logout</span>
-                </button>
-            </div>
+                </div>
+            </button>
         </div>
     </aside>
 </template>
 
 <script>
+import localforage from 'localforage';
+
 export default {
     name: "Sidebar",
+    methods: {
+        logout(){
+            localforage.removeItem('autoliv_id');
+            localforage.removeItem('email');
+            localforage.removeItem('name');
+            localforage.removeItem('userId');
+            this.$store.dispatch('setIsLogged');
+            this.$store.dispatch('user/setUserLoaded', false);
+            this.$router.push('/login');
+        }
+    },
     computed: {
         main(){
             return this.$route.name === "Main" ? true : false;
