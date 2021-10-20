@@ -51,6 +51,21 @@ const routes = [
         components: {
           home: () => import('../views/DiscutionBoards.vue')
         },
+      },
+      {
+        name: "DB_Topics",
+        path: "/db_topic/:topic_id",
+        components: {
+          home: () => import('../views/Topics.vue')
+        },
+        props: true,
+      },
+      {
+        name: "Add_Topic",
+        path: "/db_topic/addTopic",
+        components: {
+          home: () => import('../views/AddTopic.vue')
+        }
       }
     ]
   },

@@ -52,3 +52,10 @@ $router->group(['prefix' => 'recurring'], function () use($router){
     $router->post('/activateTask', ['uses' => 'RecurringTasksController@activateTask']);
     $router->post('/completeTask', ['uses' => 'RecurringTasksController@completeTask']);
 });
+
+$router->group(['prefix' => 'forum'], function () use ($router){
+    $router->get('/', ['uses' => 'ForumCategoryController@getCategories']);
+    $router->get('/topics', ['uses' => 'ForumTopicController@getTopicsForCategory']);
+    $router->get('/topic', ['uses' => 'ForumTopicController@getTopic']);
+    $router->get('/topicPosts', ['uses' => 'ForumPostsController@getPostsForTopic']);
+});

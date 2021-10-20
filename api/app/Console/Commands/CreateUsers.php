@@ -13,8 +13,8 @@ class CreateUsers extends Command {
     }
 
     public function handle(){
-        $users = ['Obi-wan Kenobi', 'Luke Skywalker', 'Darth Vader', 'Princess Leia', 'Filimon Raul'];
-        $password = hash("sha512", "Poweroverwhelming23@");
+        $users = ['Paul Ianas', 'Alin Selariu', 'Darth Vader', 'Princess Leia', 'Filimon Raul'];
+        $password = hash("sha512", "Autoliv01@");
         $email = "raul.filimon@autoliv.com";
 
         $bar = $this->output->createProgressBar(count($users));

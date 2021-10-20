@@ -6,10 +6,13 @@ import user from './User/index';
 import team from './Team/index';
 import projects from './Projects/index';
 import dailyTasks from './RecurringTasks/dailyTasks';
+import forumCategories from './Forum/categories';
+import forumTopics from './Forum/topics';
 
 export default createStore({
   state: {
     url: "http://localhost/lumen/project_mgmt/public/",
+    //url: "http://artl-app04/timely/api/public/",
     isLogged: false,
   },
   mutations: {
@@ -30,6 +33,8 @@ export default createStore({
     team,
     projects,
     dailyTasks,
+    forumCategories,
+    forumTopics,
   },
   getters: {
 

@@ -1,12 +1,14 @@
 <template>
-    <div>
-        this is discution board
-    </div>
+    <categories></categories>
 </template>
 
 <script>
+import Categories from '../components/DiscutionBoard/Categories.vue';
 export default {
-    name: "DiscutionBoard"
+    name: "DiscutionBoard",
+    components: {
+        Categories,
+    }
 }
 </script>
 

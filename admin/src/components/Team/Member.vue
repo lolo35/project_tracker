@@ -14,9 +14,9 @@
         </div>
     </div>
     <div class="flex flex-row-reverse items-center">
-        <label for="toggle" class="flex items-center cursor-pointer text-white" >
+        <label :for="`toggle-${userId}`" class="flex items-center cursor-pointer text-white" >
              <div class="relative" title="Reccuring...">
-                <input type="checkbox" id="toggle" class="sr-only" @click="recurring = !recurring">
+                <input type="checkbox" :id="`toggle-${userId}`" class="sr-only" @click="recurring = !recurring">
                 <div class="w-10 h-4 bg-gray-400 rounded-full shadow-inner"></div>
                 <div class="dot absolute w-6 h-6 bg-white rounded-full shadow-left -top-1 transition"></div>
             </div>
@@ -71,6 +71,7 @@
                     :index="index"
                     :key="task.id"
                     :task="task"
+                    :userId="userId"
                     v-on:taskDeleted="removeTask"
                 ></daily-tasks>
             </div>
@@ -81,7 +82,7 @@
                 </button> -->
             </div>
             <div class="flex items-center justify-between space-x-2 px-4 py-2 bg-gray-600 origin-top" v-for="(task, index) in tasks" :key="task.id">
-                <task :id="task.id" :name="task.task" :status="parseInt(task.status)" v-on:updateTask="updateTaskStatus"></task>
+                <task :id="task.id" :name="task.task" :status="parseInt(task.status)" v-on:updateTask="updateTaskStatus" :userId="userId"></task>
                 <button v-if="task.status != 1" class="text-red-500 w-8 h-8 bg-gray-800 hover:bg-gray-700 rounded-full" @click="confirmDeleteTask(task.id, index)">
                     <i class="fas fa-trash-alt"></i>
                 </button>

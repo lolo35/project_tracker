@@ -75,8 +75,12 @@ class TeamsController extends Controller {
         $lead = Teams::where('leaderId', '=', $request['userId'])->get();
         if($lead->isEmpty()){
             $member = Teams::where('memberId', '=', $request['userId'])->get();
+            
             if($member->isEmpty()){
                 return response()->json(array("success" => false, 'error' => 'noTeam'), 200);
+            }else{
+                $team = Teams::where('teamId', '=', $member[0]['teamId'])->get();
+                return response()->json(array('success' => true, 'data' => $team), 200);
             }
         }else{
             return response()->json(array('success' => true, 'data' => $lead), 200);

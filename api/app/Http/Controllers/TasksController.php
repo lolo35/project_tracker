@@ -35,7 +35,8 @@ class TasksController extends Controller {
                 ->toArray();
             $recurring = DB::table('recurring_tasks')
                 ->join('users', 'users.id', '=', 'recurring_tasks.user_id')
-                ->select('recurring_tasks.*', 'users.name', 'users.email', 'users.autoliv_id')
+                ->join('started_tasks', 'recurring_tasks.id', '=', 'started_tasks.task_id')
+                ->select('recurring_tasks.*', 'users.name', 'users.email', 'users.autoliv_id', 'started_tasks.minutesSpent')
                 ->where('recurring_tasks.status', '=', 2)
                 ->get()
                 ->toArray();

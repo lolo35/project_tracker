@@ -1,10 +1,11 @@
 <template>
-    <div class="flex space-x-1 items-center">
+    <div class="flex space-x-1 items-center" v-if="userCheck">
         <input type="checkbox" :id="id" :checked="statusComputed" @click="updateTask()">
         <button class="" title="Start Task" v-if="!statusComputed" @click="toggleActive()">
             <i class="fas fa-play text-green-500" v-if="!activeStatus"></i>
             <i class="fas fa-pause text-yellow-500" v-if="activeStatus"></i>
         </button>
+        
     </div>
     <label class="text-white cursor-pointer" :class="{'line-through': statusComputed}" :for="id">{{ name }}</label>
 </template>
@@ -23,6 +24,7 @@ export default {
         id: Number,
         status: Number,
         name: String,
+        userId: Number,
     },
     emits: ['updateTask'],
     created(){
@@ -71,7 +73,14 @@ export default {
     },
     computed: {
         statusComputed(){
-            return this.status === 1 ? true : false;
+            return this.status === 1 ? true : false;            
+        },
+        userCheck(){
+            if(this.$store.state.user.userId === this.userId){
+                return true;
+            }else{
+                return false;
+            }
         }
     }
 }
