@@ -104,6 +104,8 @@ export default {
                     });
                     this.$store.dispatch('setIsLogged');
                     this.$store.dispatch('user/setUserLoaded', true);
+                    this.$store.dispatch('login/setUser', "");
+                    this.$store.dispatch('login/setPass', "");
                     this.$router.push('/');
                 }
             } catch(error){
