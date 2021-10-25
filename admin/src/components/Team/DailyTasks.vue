@@ -50,7 +50,7 @@ export default {
                 const response = await axios.post(`${this.$store.state.url}recurring/deleteTask`, formData, { headers: { 'Content-Type': 'application/x-www-form-urlencoded'}});
                 console.log(response.data);
                 if(response.data.success){
-                    this.$emit('taskDeleted', this.index);
+                    this.$emit('taskDeleted', {type: this.type, index: this.index});
                 }
             } catch (error){
                 console.error(error);

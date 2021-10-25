@@ -19,6 +19,9 @@ class Kernel extends ConsoleKernel
         Commands\DateTimeDiff::class,
         Commands\DailyTasksCommand::class,
         Commands\WeeklyTasksCommand::class,
+        Commands\MonthlyTasksCommand::class,
+        Commands\QuarterlyTasksCommand::class,
+        Commands\YearlyTasksCommand::class,
     ];
 
     /**

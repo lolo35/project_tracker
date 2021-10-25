@@ -9,7 +9,6 @@ use DateTime;
 use Requests;
 use App\Models\StartedTasks;
 use App\Models\RecurringTasksHistory;
-use RecurringTasks;
 
 class RecurringTasksController extends Controller {
     public function getTasks(Request $request){
@@ -28,7 +27,7 @@ class RecurringTasksController extends Controller {
         $this->validate($request, [
             'userId' => 'required',
         ]);
-        $timeframe = ['daily', 'weekly'];
+        $timeframe = ['daily', 'weekly', 'monthly', 'quarterly', 'yearly'];
         try {
             // $now = new DateTime();
             // $now = $now->modify('-1 day')->format('Y-m-d');
@@ -88,7 +87,7 @@ class RecurringTasksController extends Controller {
             'task_id' => 'required'
         ]);
 
-        try{
+        //try{
             $task = RecurringTasksModel::where('id', '=', $request['task_id'])->get();
             $url = "https://autoliv-eu2.leading2lean.com/api/1.0/dispatches/complete/" . $task[0]['dispatch_id'] . "/";
             $headers = ['Content-type' => 'application/x-www-form-urlencoded'];
@@ -108,11 +107,21 @@ class RecurringTasksController extends Controller {
                     return response()->json(array('success' => false, 'error' => 'Couldn\'t commit to history'), 200);
                 }
             }else{
+                if($response['error'] === "Dispatch is already completed"){
+                    $commitTaskToHistory = $this->commitTaskToHistory($task[0]['id']);
+                    if($commitTaskToHistory){
+                        StartedTasks::where('task_id', '=', $task[0]['id'])->delete();
+                        RecurringTasksModel::where('id', '=', $request['task_id'])->update(['status' => 3]);
+                        return response()->json(array('success' => true), 200);
+                    }else{
+                        return response()->json(array('success' => false, 'error' => 'Couldn\'t commit to history'), 200);
+                    }
+                }
                 return response()->json($response, 200);
             }
-        }catch(Throwable $t){
-            return response()->json(array('success' => false, 'error' => $t), 200);
-        }
+        // }catch(Throwable $t){
+        //     return response()->json(array('success' => false, 'error' => $t), 200);
+        // }
     }
 
     private function commitTaskToHistory($id){
@@ -143,28 +152,39 @@ class RecurringTasksController extends Controller {
         try {
             
             $task = RecurringTasksModel::where('id', '=', $request['taskId'])->get();
+            if($task[0]['dispatch_id'] === null){
+                $dispatch = $this->openDispatch($task[0]['task'], $task[0]['recurring'], $task[0]['user_id'], $task[0]['id'], $task[0]['recurring']);
+                //print_r($dispatch);
+                if($dispatch){
+                    RecurringTasksModel::where('id', '=', $request['taskId'])->update(['dispatch_id' => $dispatch]);
+                }
+            }else {
+                $dispatch = $task[0]['dispatch_id'];
+            }
             if($request['status_id'] == -4){
                 RecurringTasksModel::where('id', '=', $request['taskId'])->update(['status' => 2]);
                 $user = User::where('id', '=', $task[0]['user_id'])->get();
                 $technicianId = $this->getTechnicianId($user[0]['autoliv_id']);
-
+                //print_r($technicianId);
                 if($technicianId){
+                    //print_r($technicianId);
                     $url = "https://autoliv-eu2.leading2lean.com/api/1.0/dispatchtechnicians/dispatch/";
                     
                     $options = [
                         'auth' => 'ZjbBpxIq0qUYRoEOZkJYlNrEJL5Egkgh',
                         'site' => 15,
-                        'dispatch_id' => $task[0]['dispatch_id'],
+                        'dispatch_id' => $dispatch,
                         'technician_id' => $technicianId
                     ];
 
                     $l2l_request = Requests::post($url, $headers, $options);
                     $response = json_decode($l2l_request->body, true);
+                    //print_r($response);
                     if($response['success']){
                         return response()->json(array('success' => true), 200);
                     }else {
                         if($response['error'] === "technician already dispatched"){
-                            $url = "https://autoliv-eu2.leading2lean.com/api/1.0/dispatches/changestatus/" . $task[0]['dispatch_id'] . "/";
+                            $url = "https://autoliv-eu2.leading2lean.com/api/1.0/dispatches/changestatus/" . $dispatch . "/";
                             $options = [
                                 'auth' => 'ZjbBpxIq0qUYRoEOZkJYlNrEJL5Egkgh',
                                 'site' => 15,
@@ -183,7 +203,7 @@ class RecurringTasksController extends Controller {
                 }   
             }elseif($request['status_id'] == -5){
                 RecurringTasksModel::where('id', '=', $request['taskId'])->update(['status' => 0]);
-                $url = "https://autoliv-eu2.leading2lean.com/api/1.0/dispatches/changestatus/" . $task[0]['dispatch_id'] . "/";
+                $url = "https://autoliv-eu2.leading2lean.com/api/1.0/dispatches/changestatus/" . $dispatch . "/";
                 $options = [
                     'auth' => 'ZjbBpxIq0qUYRoEOZkJYlNrEJL5Egkgh',
                     'site' => 15,
@@ -212,5 +232,42 @@ class RecurringTasksController extends Controller {
         }else{
             return false;
         }
+    }
+
+    private function openDispatch($task, $type, $userId, $taskId, $timeframe){
+        switch($type){
+            case 'daily': $description = "Daily task: " . $task; break;
+            case 'weekly': $description = "Weekly task: " . $task; break;
+            case "monthly": $description = "Monthly task: " . $task; break;
+            case "quarterly": $description = "Quarterly task: " . $task; break;
+            case "yearly": $description = "Yearly task: " . $task; break;
+        }
+        $url = "https://autoliv-eu2.leading2lean.com/api/1.0/dispatches/open/";
+            $options = [
+                'auth' => "ZjbBpxIq0qUYRoEOZkJYlNrEJL5Egkgh",
+                'site' => 15,
+                'description' => $description,
+                'dispatchtypecode' => 'test',
+                'machinecode' => "TEST 1",
+                'tradecode' => 'Others',
+            ];
+
+            $headers = ['Content-type' => 'application/x-www-form-urlencoded'];
+
+            $l2l_request = Requests::post($url, $headers, $options);
+            $response = json_decode($l2l_request->body, true);
+
+            if($response['success']){
+                $startTask = new StartedTasks();
+                $startTask->dispatch_id = $response['data']['id'];
+                $startTask->user_id = $userId;
+                $startTask->task_id = $taskId;
+                $startTask->timeframe = $timeframe;
+                $startTask->minutesSpent = 0;
+                $startTask->save();
+                return $response['data']['id'];
+            }else {
+                return false;
+            }
     }
 }

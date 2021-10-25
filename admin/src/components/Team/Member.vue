@@ -90,6 +90,48 @@
                     v-on:taskDeleted="removeTask"
                 ></daily-tasks>
             </div>
+             <div v-if="monthlyTasks.length > 0">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-semibold text-gray-200">Monthly Tasks</h3>
+                </div>
+                <daily-tasks
+                    v-for="(task, index) in monthlyTasks"
+                    :index="index"
+                    :key="task.id"
+                    :task="task"
+                    :userId="userId"
+                    :type="'monthly'"
+                    v-on:taskDeleted="removeTask"
+                ></daily-tasks>
+            </div>
+            <div v-if="quarterlyTasks.length > 0">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-semibold text-gray-200">Quarterly Tasks</h3>
+                </div>
+                <daily-tasks
+                    v-for="(task, index) in quarterlyTasks"
+                    :index="index"
+                    :key="task.id"
+                    :task="task"
+                    :userId="userId"
+                    :type="'quarterly'"
+                    v-on:taskDeleted="removeTask"
+                ></daily-tasks>
+            </div>
+            <div v-if="yearlyTasks.length > 0">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-semibold text-gray-200">Yearly Tasks</h3>
+                </div>
+                <daily-tasks
+                    v-for="(task, index) in yearlyTasks"
+                    :index="index"
+                    :key="task.id"
+                    :task="task"
+                    :userId="userId"
+                    :type="'yearly'"
+                    v-on:taskDeleted="removeTask"
+                ></daily-tasks>
+            </div>
             <div class="flex items-center justify-between">
                 <h3 class="text-lg font-semibold text-gray-200">Tasks</h3>
                 <!-- <button class="rounded-full bg-gray-900 text-white w-8 h-8 hover:text-blue-300 hover:bg-gray-700">
@@ -126,13 +168,16 @@ export default {
             tasks: Array,
             dailyTasks: Array,
             weeklyTasks: Array,
+            monthlyTasks: Array,
+            quarterlyTasks: Array,
+            yearlyTasks: Array,
             showTasks: false,
             tasksLoaded: false,
             selectedProject: "",
             highlightNoProject: true,
             recurring: false,
             recurringTasks: [],
-            timeframes: ['daily', 'weekly']
+            timeframes: ['daily', 'weekly', 'monthly', 'quarterly', 'yearly']
         }
     },
     props: {
@@ -156,6 +201,12 @@ export default {
                 this.dailyTasks.push(payload.data);
             }else if(payload.occurence === "weekly"){
                 this.weeklyTasks.push(payload.data);
+            }else if(payload.occurence === "monthly"){
+                this.monthlyTasks.push(payload.data);
+            }else if(payload.occurence === "quarterly"){
+                this.quarterlyTasks.push(payload.data);
+            }else if(payload.occurence === "yearly"){
+                this.yearlyTasks.push(payload.data);
             }
         },
         removeTask(payload){
@@ -164,6 +215,12 @@ export default {
                 this.dailyTasks.splice(payload.index, 1);
             }else if(payload.type === "weekly"){
                 this.weeklyTasks.splice(payload.index, 1);
+            }else if(payload.type === "monthly"){
+                this.monthlyTasks.splice(payload.index, 1);
+            }else if(payload.type === "quarterly"){
+                this.quarterlyTasks.splice(payload.index, 1);
+            }else if(payload.type === "yearly"){
+                this.yearlyTasks.splice(payload.splice, 1);
             }
         },
         async setSelectdProject(){
@@ -183,6 +240,9 @@ export default {
                     
                     this.dailyTasks = response.data.data.daily;
                     this.weeklyTasks = response.data.data.weekly;
+                    this.monthlyTasks = response.data.data.monthly;
+                    this.quarterlyTasks = response.data.data.quarterly;
+                    this.yearlyTasks = response.data.data.yearly;
                     
                 }else{
                     if(response.data.error.errorInfo[1] === 2002){
