@@ -30,6 +30,7 @@ export default {
     props: {
         task: Object,
         index: Number,
+        type: String,
     },
     emits: ['taskDeleted'],
     created(){
@@ -78,8 +79,9 @@ export default {
             formData.append('task_id', this.task.id);
             try{
                 const response = await axios.post(`${this.$store.state.url}recurring/completeTask`, formData, { headers: {'Content-type': 'application/x-www-form-urlencoded'}});
+                console.log(response.data);
                 if(response.data.success){
-                    this.$emit('taskDeleted', this.index);
+                    this.$emit('taskDeleted', {type: this.type, index: this.index});
                     localforage.removeItem(`recurringTask-${this.task.id}`);
                 }else{
                     console.log(response.data);

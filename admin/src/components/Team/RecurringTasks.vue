@@ -90,7 +90,7 @@ export default {
                 console.log(response.data);
                 if(response.data.success){
                     this.handleSuccessfullTask();
-                    this.$emit('updateTask', response.data.data);
+                    this.$emit('updateTask', {'data': response.data.data, 'occurence' : this.recurring });
                 }
             } catch(error){
                 console.error(error);

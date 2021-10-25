@@ -61,7 +61,7 @@
     </div>
     <recurring-tasks v-if="recurring" :userId="userId" v-on:updateTask="updateTasks"></recurring-tasks>
     <transition name="dropdown" enter-active-class="animate__animated animate__fadeIn" leave-active-class="animate__animated animate__fadeOut animate__faster">
-        <div v-if="showTasks">
+        <div v-if="showTasks" class="max-h-102 overflow-y-scroll">
             <div v-if="dailyTasks.length > 0">
                 <div class="flex items-center justify-between">
                     <h3 class="text-lg font-semibold text-gray-200">Daily Tasks</h3>
@@ -72,6 +72,21 @@
                     :key="task.id"
                     :task="task"
                     :userId="userId"
+                    :type="'daily'"
+                    v-on:taskDeleted="removeTask"
+                ></daily-tasks>
+            </div>
+            <div v-if="weeklyTasks.length > 0">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-semibold text-gray-200">Weekly Tasks</h3>
+                </div>
+                <daily-tasks
+                    v-for="(task, index) in weeklyTasks"
+                    :index="index"
+                    :key="task.id"
+                    :task="task"
+                    :userId="userId"
+                    :type="'weekly'"
                     v-on:taskDeleted="removeTask"
                 ></daily-tasks>
             </div>
@@ -110,12 +125,14 @@ export default {
             task: "",
             tasks: Array,
             dailyTasks: Array,
+            weeklyTasks: Array,
             showTasks: false,
             tasksLoaded: false,
             selectedProject: "",
             highlightNoProject: true,
             recurring: false,
             recurringTasks: [],
+            timeframes: ['daily', 'weekly']
         }
     },
     props: {
@@ -129,14 +146,25 @@ export default {
     },
     created(){
         this.fetchProjects();
+        
         this.fetchRecurringDailyTasks();
+       
     },
     methods: {
         updateTasks(payload){
-            this.dailyTasks.push(payload);
+            if(payload.occurence === "daily"){
+                this.dailyTasks.push(payload.data);
+            }else if(payload.occurence === "weekly"){
+                this.weeklyTasks.push(payload.data);
+            }
         },
         removeTask(payload){
-            this.dailyTasks.splice(payload, 1);
+            //console.log(payload);
+            if(payload.type === "daily"){
+                this.dailyTasks.splice(payload.index, 1);
+            }else if(payload.type === "weekly"){
+                this.weeklyTasks.splice(payload.index, 1);
+            }
         },
         async setSelectdProject(){
             try {
@@ -152,7 +180,10 @@ export default {
                 const response = await axios.get(`${this.$store.state.url}recurring/dailyTasks?userId=${this.userId}`);
                 console.log('Daily Tasks: ', response.data);
                 if(response.data.success){
-                    this.dailyTasks = response.data.data;
+                    
+                    this.dailyTasks = response.data.data.daily;
+                    this.weeklyTasks = response.data.data.weekly;
+                    
                 }else{
                     if(response.data.error.errorInfo[1] === 2002){
                         this.fetchRecurringDailyTasks();

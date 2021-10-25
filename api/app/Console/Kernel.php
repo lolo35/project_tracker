@@ -18,6 +18,7 @@ class Kernel extends ConsoleKernel
         Commands\FizzBuzz::class,
         Commands\DateTimeDiff::class,
         Commands\DailyTasksCommand::class,
+        Commands\WeeklyTasksCommand::class,
     ];
 
     /**

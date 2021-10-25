@@ -7,9 +7,9 @@ use Requests;
 use DateTime;
 use Throwable;
 
-class DailyTasksCommand extends Command {
-    protected $signature = "daily:tasks";
-    protected $description = "Starts daily tasks";
+class WeeklyTasksCommand extends Command {
+    protected $signature = "recurring:weekly";
+    protected $description = "Starts weekly tasks, every monday";
 
     public function __construct()
     {
@@ -19,15 +19,15 @@ class DailyTasksCommand extends Command {
     public function handle(){
         $date = new DateTime();
         $date = $date->format("D");
-        if($date !== "Sat" || $date !== "Sun"){
-            $startedTasks = StartedTasks::where('timeframe', '=', 'daily')->get('task_id')->toArray();
+        if($date === "Mon"){
+            $startedTasks = StartedTasks::where('timeframe', '=', 'weekly')->get('task_id')->toArray();
             $startedTaskIds = array();
             foreach($startedTasks as $startedTask){
                 $startedTaskIds[] = $startedTask['task_id'];
             }
-            $data = RecurringTasksModel::where('recurring', '=', 'daily')->whereNotIn('id', $startedTaskIds)->get()->toArray();
+            $data = RecurringTasksModel::where('recurring', '=', 'weekly')->whereNotIn('id', $startedTaskIds)->get()->toArray();
             foreach($data as $task){
-                $taskDesc = "Daily task: " . $task['task'];
+                $taskDesc = "Weekly task: " . $task['task'];
                 try {
                     $url = "https://autoliv-eu2.leading2lean.com/api/1.0/dispatches/open/";
                     $options = [
@@ -61,7 +61,7 @@ class DailyTasksCommand extends Command {
                             $startTask->dispatch_id = $response['data']['id'];
                             $startTask->user_id = $task['user_id'];
                             $startTask->task_id = $task['id'];
-                            $startTask->timeframe = "daily";
+                            $startTask->timeframe = "weekly";
                             $startTask->minutesSpent = 0;
                             $startTask->save();
                             $this->info($task['task'] . " -  success");

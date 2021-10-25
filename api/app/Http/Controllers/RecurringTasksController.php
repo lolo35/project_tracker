@@ -26,17 +26,21 @@ class RecurringTasksController extends Controller {
     }
     public function getDailyTasks(Request $request){
         $this->validate($request, [
-            'userId' => 'required'
+            'userId' => 'required',
         ]);
-
+        $timeframe = ['daily', 'weekly'];
         try {
             // $now = new DateTime();
             // $now = $now->modify('-1 day')->format('Y-m-d');
-            $data = RecurringTasksModel::where('user_id', '=', $request['userId'])
-                ->where('recurring', '=', 'daily')
-                ->where('status', "<", 3)
-                //->whereRaw("cast(created_at as date) = '$now'")
-                ->get();
+            $data = Array();
+            foreach($timeframe as $timefr){
+                $query = RecurringTasksModel::where('user_id', '=', $request['userId'])
+                    ->where('recurring', '=', $timefr)
+                    ->where('status', "<", 3)
+                    //->whereRaw("cast(created_at as date) = '$now'")
+                    ->get();
+                $data[$timefr] = $query;
+            }
             
             return response()->json(array('success' => true, 'data' => $data), 200);
         } catch(Throwable $t){
