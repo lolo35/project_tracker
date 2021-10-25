@@ -41,6 +41,10 @@ export default {
                 if(response.data.success){
                     this.$store.dispatch('forumCategories/setCategories', response.data.data);
                     this.showCategories = true;
+                }else{
+                    if(response.data.error.errorInfo[1] === 2002){
+                        this.fetchCategories();
+                    }
                 }
             } catch (error) {
                 console.error(error);

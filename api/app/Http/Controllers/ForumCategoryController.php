@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 use App\Models\ForumCategory;
+use Illuminate\Http\Request;
 use Exception;
 
 class ForumCategoryController extends Controller {
@@ -12,4 +13,5 @@ class ForumCategoryController extends Controller {
             return response()->json(array('success' => false, 'error' => $e), 200);
         }
     }
+
 }

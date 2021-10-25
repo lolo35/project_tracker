@@ -69,10 +69,19 @@ const routes = [
       },
       {
         name: "Add_Topic",
-        path: "/db_topic/addTopic",
+        path: "/db_topic/addTopic/:topic_id",
         components: {
           home: () => import('../views/AddTopic.vue')
-        }
+        },
+        props: true,
+      },
+      {
+        name: "Topic",
+        path: '/db_topic/topic/:topic_id',
+        components: {
+          home: () => import('../views/Topic/Topic.vue')
+        },
+        props: true,
       }
     ]
   },

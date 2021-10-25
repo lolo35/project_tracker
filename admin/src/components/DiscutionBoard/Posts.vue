@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-row items-center justify-between bg-gray-600 p-2 cursor-pointer hover:bg-gray-500 border-b">
+    <router-link :to="`/db_topic/topic/${postData.id}`" class="flex flex-row items-center justify-between bg-gray-600 p-2 cursor-pointer hover:bg-gray-500 border-b">
         <div class="flex flex-col w-3/4">
             <div class="flex flex-row items-center w-full space-x-2">
                 <div class="flex flex-row">
@@ -35,7 +35,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </router-link>
 </template>
 
 <script>

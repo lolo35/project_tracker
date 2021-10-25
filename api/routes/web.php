@@ -59,4 +59,8 @@ $router->group(['prefix' => 'forum'], function () use ($router){
     $router->get('/topics', ['uses' => 'ForumTopicController@getTopicsForCategory']);
     $router->get('/topic', ['uses' => 'ForumTopicController@getTopic']);
     $router->get('/topicPosts', ['uses' => 'ForumPostsController@getPostsForTopic']);
+    $router->post('/addTopic', ['uses' => 'ForumPostsController@createTopic']);
+    $router->get('/topicDiscution', ['uses' => "ForumPostsController@getTopicDiscution"]);
+    $router->post('/postReply', ['uses' => "ForumPostsController@postReply"]);
+    $router->post('/addView', ['uses' => 'ForumPostsController@addView']);
 });

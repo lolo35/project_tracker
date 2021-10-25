@@ -28,7 +28,7 @@
         </div>
         <!-- <add-topic></add-topic> -->
         <div class="flex flex-row mt-5">
-            <router-link to="addTopic" class="bg-gray-300 rounded px-3 py-1 hover:bg-gray-400 text-sm font-semibold">
+            <router-link :to="`addTopic/${topic_id}`" class="bg-gray-300 rounded px-3 py-1 hover:bg-gray-400 text-sm font-semibold">
                 <i class="fas fa-pencil-alt"></i>
                 Post new topic
             </router-link>

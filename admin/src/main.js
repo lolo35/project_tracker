@@ -5,5 +5,4 @@ import store from './store'
 import './assets/css/global.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 import 'animate.css/animate.css';
-
 createApp(App).use(store).use(router).mount('#app')

@@ -52,9 +52,14 @@ export default {
                     //this.$store.dispatch('forumTopics/setTopics', response.data.data);
                     this.topics = response.data.data;
                     this.showTopics = true;
+                }else{
+                    if(response.data.error.errorInfo[1] === 2002){
+                        this.fetchTopics();
+                    }
                 }
             } catch (error){
                 console.error(error);
+                
             }
         }
     }
