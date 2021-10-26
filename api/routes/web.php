@@ -35,6 +35,7 @@ $router->group(['prefix' => 'user'], function() use ($router){
     $router->post('/updateTask', ['uses' => "TasksController@updateTask"]);
     $router->post('/deleteTask', ['uses' => "TasksController@deleteTask"]);
     $router->post('/toggleTask', ['uses' => "TasksController@toggleTask"]);
+    $router->post('/editTaskDescription', ['uses' => "TasksController@editTaskDescription"]);
 });
 
 $router->group(['prefix' => 'projects'], function() use($router) {

@@ -139,7 +139,15 @@
                 </button> -->
             </div>
             <div class="flex items-center justify-between space-x-2 px-4 py-2 bg-gray-600 origin-top" v-for="(task, index) in tasks" :key="task.id">
-                <task :id="task.id" :name="task.task" :status="parseInt(task.status)" v-on:updateTask="updateTaskStatus" :userId="userId"></task>
+                <task 
+                    :id="task.id" 
+                    :index="parseInt(index)" 
+                    :name="task.task" 
+                    :status="parseInt(task.status)" 
+                    v-on:updateTask="updateTaskStatus" 
+                    v-on:editTask="editThisTask"
+                    :userId="userId"
+                ></task>
                 <button v-if="task.status != 1" class="text-red-500 w-8 h-8 bg-gray-800 hover:bg-gray-700 rounded-full" @click="confirmDeleteTask(task.id, index)">
                     <i class="fas fa-trash-alt"></i>
                 </button>
@@ -196,6 +204,9 @@ export default {
        
     },
     methods: {
+        editThisTask(payload){
+            this.tasks[payload.index].task = payload.description;
+        },
         updateTasks(payload){
             if(payload.occurence === "daily"){
                 this.dailyTasks.push(payload.data);

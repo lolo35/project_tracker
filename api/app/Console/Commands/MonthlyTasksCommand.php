@@ -34,8 +34,8 @@ class MonthlyTasksCommand extends Command {
                         'auth' => "ZjbBpxIq0qUYRoEOZkJYlNrEJL5Egkgh",
                         'site' => 15,
                         'description' => $taskDesc,
-                        'dispatchtypecode' => 'test',
-                        'machinecode' => "TEST 1",
+                        'dispatchtypecode' => 'Monthly Task',
+                        'machinecode' => "IOT-General",
                         'tradecode' => 'Others',
                     ];
 

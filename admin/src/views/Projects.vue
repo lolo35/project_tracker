@@ -2,7 +2,7 @@
     <toolbar></toolbar>
     <no-project-warning v-if="$store.state.projects.projects.length == 0"></no-project-warning>
     <add-project-modal v-if="$store.state.projects.showAddProjectModal"></add-project-modal>
-    <div class="flex flex-row flex-wrap space-x-1">
+    <div class="flex flex-row flex-wrap">
         <project-card 
             v-for="project in filteredProjects" 
             :project="project.name" 

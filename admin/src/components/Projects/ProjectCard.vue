@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-gray-700 text-white px-6 py-3 rounded border flex border-gray-700 relative" style="min-width: 300px;">
+    <div class="bg-gray-700 text-white px-6 py-3 rounded border flex border-gray-700 relative mr-1 mb-1" style="min-width: 300px;">
         <div class="flex flex-col w-full">
             <div class="flex flex-row items-center justify-between">
                 <p class="text-lg font-semibold">{{ project }}</p>

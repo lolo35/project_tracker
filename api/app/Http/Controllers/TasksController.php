@@ -66,8 +66,8 @@ class TasksController extends Controller {
                 'auth' => "ZjbBpxIq0qUYRoEOZkJYlNrEJL5Egkgh",
                 'site' => 15,
                 'description' => $request['task'],
-                'dispatchtypecode' => 'test',
-                'machinecode' => "TEST 1",
+                'dispatchtypecode' => 'Project Task',
+                'machinecode' => "IOT-General",
                 'tradecode' => 'Others',
             ];
 
@@ -247,6 +247,20 @@ class TasksController extends Controller {
 
         try {
             TasksModel::where('id', '=', $request['id'])->delete();
+            return response()->json(array('success' => true), 200);
+        } catch (Exception $e){
+            return response()->json(array('success' => false, 'error' => $e), 200);
+        }
+    }
+
+    public function editTaskDescription(Request $request){
+        $this->validate($request, [
+            'task_id' => 'required',
+            'description' => 'required',
+        ]);
+
+        try {
+            TasksModel::where('id', '=', $request['task_id'])->update(['task' => $request['description']]);
             return response()->json(array('success' => true), 200);
         } catch (Exception $e){
             return response()->json(array('success' => false, 'error' => $e), 200);

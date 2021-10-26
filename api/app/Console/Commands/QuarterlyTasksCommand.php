@@ -33,8 +33,8 @@ class QuarterlyTasksCommand extends Command {
                         'auth' => "ZjbBpxIq0qUYRoEOZkJYlNrEJL5Egkgh",
                         'site' => 15,
                         'description' => $taskDesc,
-                        'dispatchtypecode' => 'test',
-                        'machinecode' => "TEST 1",
+                        'dispatchtypecode' => 'Quarterly Task',
+                        'machinecode' => "IOT-General",
                         'tradecode' => 'Others',
                     ];
 
