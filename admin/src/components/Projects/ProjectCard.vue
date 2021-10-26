@@ -19,6 +19,10 @@
                     <p class="text-sm text-gray-400">Total time spent: </p>
                     <p class="text-sm text-gray-400">{{ timeSpent }} min</p>
                 </div>
+                <div class="flex flex-row items-center justify-between">
+                    <p class="text-sm text-gray-400">Priority: </p>
+                    <div v-html="userFriendlyPriority"></div>
+                </div>
             </div>
         </div>
         <router-link :to="`/projectDetails/${projectId}`" class="absolute top-1 right-2">
@@ -47,6 +51,7 @@ export default {
         description: String,
         owner: String,
         projectId: Number,
+        priority: Number,
     },
     created(){
         this.fetchStats();
@@ -71,6 +76,18 @@ export default {
                 console.error(error);
             }
             
+        }
+    },
+    computed: {
+        userFriendlyPriority() {
+            let status;
+            switch(this.priority){
+                case 0: status = `<p class="text-sm text-red-500">Highest</p>`; break;
+                case 1: status = `<p class="text-sm text-yellow-400">Medium</p>`; break;
+                case 2: status = `<p class="text-sm text-green-400">Low</p>`; break;
+                case 3: status = `<p class="text-sm text-gray-600">Lowest</p>`; break;
+            }
+            return status;
         }
     }
 }

@@ -42,6 +42,8 @@ $router->group(['prefix' => 'projects'], function() use($router) {
     $router->post('/addProject', ['uses' => "ProjectsController@addProject"]);
     $router->get('/projectStats', ['uses' => "ProjectsController@percentDone"]);
     $router->get('/projectDetails', ['uses' => "ProjectsController@getTasksForProject"]);
+    $router->post('/changePriority', ['uses' => "ProjectsController@changePriority"]);
+    $router->get('/priorityHistory', ['uses' => "ProjectsController@getProjectHistory"]);
 });
 
 $router->group(['prefix' => 'recurring'], function () use($router){

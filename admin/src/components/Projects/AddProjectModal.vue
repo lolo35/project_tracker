@@ -27,6 +27,24 @@
                         <p class="text-xs text-gray-300">How would you describe your project?</p>
                         <textarea v-model="description" class="w-full p-5 bg-white border border-gray-200 rounded shadow-sm appearance-none" required></textarea>
                     </div>
+                    <div class="flex flex-col w-full">
+                        <div class="flex justify-between">
+                            <p class="mb-2 font-semibold text-gray-700">Priority</p>
+                        </div>
+                        <div class="flex flex-row items-center justify-between">
+                            <p class="text-xs text-gray-300">Please select a priority for your project</p>
+                            <p class="text-xs text-gray-300">Please justify your chosen priority</p>
+                        </div>
+                        <div class="flex flex-row items-center space-x-2">                            
+                            <select v-model="priority" class="w-full p-5 bg-white border border-gray-200 rounded shadow-sm appearance-none mb-5">
+                                <option value="0">Highest priority</option>
+                                <option value="1">Medium priority</option>
+                                <option value="2">Low priority</option>
+                                <option value="3">Lowest priority</option>
+                            </select>
+                            <input v-model="comment" type="text" class="w-full p-5 bg-white border border-gray-200 rounded shadow-sm appearance-none mb-5" required>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="flex flex-row items-center justify-between p-5 bg-white border-t border-gray-200 rounded-bl-lg rounded-br-lg">
@@ -46,6 +64,8 @@ export default {
         return {
             project: "",
             description: "",
+            priority: "",
+            comment: "",
         }
     },
     methods: {
@@ -54,6 +74,8 @@ export default {
             let formData = new FormData();
             formData.append('project', this.project);
             formData.append('description', this.description);
+            formData.append('priority', this.priority);
+            formData.append('comment', this.comment);
             try {
                 const response = await axios.post(`${this.$store.state.url}projects/addProject`, formData, { headers : { 'Content-type': 'application/x-www-form-urlencoded' }});
                 console.log(response.data);

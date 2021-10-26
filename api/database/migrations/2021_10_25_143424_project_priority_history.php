@@ -14,6 +14,13 @@ class ProjectPriorityHistory extends Migration
     public function up()
     {
         //
+        Schema::create('project_priority_history', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->integer('project_id');
+            $table->integer('priority');
+            $table->string('comment');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -24,5 +31,6 @@ class ProjectPriorityHistory extends Migration
     public function down()
     {
         //
+        Schema::dropIfExists('project_priority_history');
     }
 }

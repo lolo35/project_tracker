@@ -4,6 +4,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProjectsModel extends Model {
     protected $table = "projects";
-    protected $fillable = ['teamId', 'name', 'description'];
+    protected $fillable = ['teamId', 'name', 'description', 'priority'];
     protected $hidden = [];
 }
