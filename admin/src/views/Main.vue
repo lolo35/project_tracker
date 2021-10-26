@@ -22,7 +22,7 @@
                                 <td class="px-4 py-2 whitespace-nowrap border-r">{{ row.autoliv_id }}</td>
                                 <td class="px-4 py-2 whitespace-nowrap border-r">{{ row.task }}</td>
                                 <td class="px-4 py-2 whitespace-nowrap border-r">{{ row.updated_at }}</td>
-                                <td class="px-4 py-2 whitespace-nowrap border-r">{{ row.minutesSpent }}</td>
+                                <td class="px-4 py-2 whitespace-nowrap border-r">{{ row.minutesSpent }} min</td>
                                 <td class="px-4 py-2 whitespace-nowrap border-r">
                                     <button class="text-blue-500 hover:underline" @click="fetchDispatch(row.dispatch_id)">
                                         {{ row.dispatch_id }}
@@ -77,6 +77,9 @@ export default {
     },
     created(){
         this.fetchTasks();
+        setInterval(() => {
+            this.fetchTasks();
+        }, 60000);
     }
 }
 </script>

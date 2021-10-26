@@ -260,8 +260,20 @@ class TasksController extends Controller {
         ]);
 
         try {
-            TasksModel::where('id', '=', $request['task_id'])->update(['task' => $request['description']]);
-            return response()->json(array('success' => true), 200);
+            $task = TasksModel::where('id', '=', $request['task_id'])->get();
+            $dispatchId = $task[0]['dispatch_id'];
+            $url = "https://autoliv-eu2.leading2lean.com/api/1.0/dispatches/set_description/$dispatchId/";
+            $headers = ['Content-type' => 'application/x-www-form-urlencoded'];
+            $options = ['auth' => 'ZjbBpxIq0qUYRoEOZkJYlNrEJL5Egkgh', 'site' => 15, 'description' => $request['description']];
+
+            $l2lPost = Requests::post($url, $headers, $options);
+            $response = json_decode($l2lPost->body, true);
+            if($response['success']){
+                TasksModel::where('id', '=', $request['task_id'])->update(['task' => $request['description']]);
+                return response()->json(array('success' => true), 200);
+            }else {
+                return response()->json(array('success' => false, 'error' => $response['error']), 200);
+            }
         } catch (Exception $e){
             return response()->json(array('success' => false, 'error' => $e), 200);
         }

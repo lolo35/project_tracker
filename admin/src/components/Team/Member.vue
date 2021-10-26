@@ -53,8 +53,8 @@
             <label for="addtask" class="text-white font-semibold">Add task</label>
         </div>
         <form class="flex items-center px-4 py-2" @submit="addTask()" v-if="!highlightNoProject">
-            <input type="text" id="addtask" v-model="task" class="w-full rounded px-2 py-1 outline-none" required>
-            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded-r-md">
+            <input type="text" id="addtask" v-model="task" class="w-full rounded px-2 py-1 outline-none" required :disabled="disabled">
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded-r-md" :disabled="disabled">
                 <i class="fas fa-check"></i>
             </button>
         </form>
@@ -185,7 +185,8 @@ export default {
             highlightNoProject: true,
             recurring: false,
             recurringTasks: [],
-            timeframes: ['daily', 'weekly', 'monthly', 'quarterly', 'yearly']
+            timeframes: ['daily', 'weekly', 'monthly', 'quarterly', 'yearly'],
+            disabled: false,
         }
     },
     props: {
@@ -359,6 +360,7 @@ export default {
         addTask(){
             if(Object.prototype.hasOwnProperty.call(this.selectedProject, 'id')){
                 this.highlightNoProject = false;
+                this.disabled = true;
                 event.preventDefault();
                 let formData = new FormData();
                 formData.append('userId', this.userId);
@@ -375,10 +377,12 @@ export default {
                     if(response.data.success){
                         this.task = "";
                         this.tasks.unshift(response.data.data);
+                        this.disabled = false;
                     }
                 }).catch(error => {
                     console.error(error);
-                });
+                    this.disabled = false;
+                });                
             }else{
                 this.highlightNoProject = true;
             }
