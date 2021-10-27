@@ -246,8 +246,20 @@ class TasksController extends Controller {
         ]);
 
         try {
-            TasksModel::where('id', '=', $request['id'])->delete();
-            return response()->json(array('success' => true), 200);
+            $task = TasksModel::where('id', '=', $request['id'])->get();
+            $dispatchId = $task[0]['dispatch_id'];
+            $url = "https://autoliv-eu2.leading2lean.com/api/1.0/dispatches/delete/$dispatchId/";
+            $headers = ['Content-type' => 'application/x-www-form-urlencoded'];
+            $options = ['auth' => 'ZjbBpxIq0qUYRoEOZkJYlNrEJL5Egkgh', 'site' => 15];
+
+            $l2lRequest = Requests::post($url, $headers, $options);
+            $response = json_decode($l2lRequest->body, 200);
+            if($response['success']){
+                TasksModel::where('id', '=', $request['id'])->delete();
+                return response()->json(array('success' => true), 200);
+            }else{
+                return response()->json(array('success' => false, 'error' => $response['error']), 200);
+            }
         } catch (Exception $e){
             return response()->json(array('success' => false, 'error' => $e), 200);
         }

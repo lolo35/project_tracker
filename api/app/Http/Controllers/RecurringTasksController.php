@@ -236,19 +236,19 @@ class RecurringTasksController extends Controller {
 
     private function openDispatch($task, $type, $userId, $taskId, $timeframe){
         switch($type){
-            case 'daily': $description = "Daily task: " . $task; break;
-            case 'weekly': $description = "Weekly task: " . $task; break;
-            case "monthly": $description = "Monthly task: " . $task; break;
-            case "quarterly": $description = "Quarterly task: " . $task; break;
-            case "yearly": $description = "Yearly task: " . $task; break;
+            case 'daily': $machineCode = "Daily Task"; $description = "Daily task: " . $task; break;
+            case 'weekly': $machineCode = "Weekly Task"; $description = "Weekly task: " . $task; break;
+            case "monthly": $machineCode = "Monthly Task"; $description = "Monthly task: " . $task; break;
+            case "quarterly": $machineCode = "Quarterly Task"; $description = "Quarterly task: " . $task; break;
+            case "yearly": $machineCode = "Yearly Task"; $description = "Yearly task: " . $task; break;
         }
         $url = "https://autoliv-eu2.leading2lean.com/api/1.0/dispatches/open/";
             $options = [
                 'auth' => "ZjbBpxIq0qUYRoEOZkJYlNrEJL5Egkgh",
                 'site' => 15,
                 'description' => $description,
-                'dispatchtypecode' => 'test',
-                'machinecode' => "TEST 1",
+                'dispatchtypecode' => $machineCode,
+                'machinecode' => "IOT-General",
                 'tradecode' => 'Others',
             ];
 
