@@ -73,6 +73,7 @@
                     :task="task"
                     :userId="userId"
                     :type="'daily'"
+                    v-on:taskChangedTF="changeTaskTimeframe"
                     v-on:taskDeleted="removeTask"
                 ></daily-tasks>
             </div>
@@ -87,6 +88,7 @@
                     :task="task"
                     :userId="userId"
                     :type="'weekly'"
+                    v-on:taskChangedTF="changeTaskTimeframe"
                     v-on:taskDeleted="removeTask"
                 ></daily-tasks>
             </div>
@@ -101,6 +103,7 @@
                     :task="task"
                     :userId="userId"
                     :type="'monthly'"
+                    v-on:taskChangedTF="changeTaskTimeframe"
                     v-on:taskDeleted="removeTask"
                 ></daily-tasks>
             </div>
@@ -115,6 +118,7 @@
                     :task="task"
                     :userId="userId"
                     :type="'quarterly'"
+                    v-on:taskChangedTF="changeTaskTimeframe"
                     v-on:taskDeleted="removeTask"
                 ></daily-tasks>
             </div>
@@ -129,6 +133,7 @@
                     :task="task"
                     :userId="userId"
                     :type="'yearly'"
+                    v-on:taskChangedTF="changeTaskTimeframe"
                     v-on:taskDeleted="removeTask"
                 ></daily-tasks>
             </div>
@@ -205,6 +210,25 @@ export default {
        
     },
     methods: {
+        changeTaskTimeframe(payload){
+            console.log(payload);
+            switch(payload.timeframe){
+                case "daily": this.dailyTasks.push(payload.task); break;
+                case "weekly": this.weeklyTasks.push(payload.task); break;
+                case "monthly": this.monthlyTasks.push(payload.task); break;
+                case "quarterly": this.quarterlyTasks.push(payload.task); break;
+                case "yearly": this.yearlyTasks.push(payload.task); break;
+            }
+
+            switch(payload.type){
+                case "daily": this.dailyTasks.splice(payload.index, 1); break;
+                case "weekly": this.weeklyTasks.splice(payload.index, 1); break;
+                case "monthly": this.monthlyTasks.splice(payload.index, 1); break;
+                case "quarterly": this.quarterlyTasks.splice(payload.index, 1); break;
+                case "yearly": this.yearlyTasks.splice(payload.index, 1); break;
+            }
+
+        },
         editThisTask(payload){
             this.tasks[payload.index].task = payload.description;
         },

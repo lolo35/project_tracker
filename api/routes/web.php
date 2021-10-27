@@ -55,6 +55,7 @@ $router->group(['prefix' => 'recurring'], function () use($router){
     $router->post('/activateTask', ['uses' => 'RecurringTasksController@activateTask']);
     $router->post('/completeTask', ['uses' => 'RecurringTasksController@completeTask']);
     $router->get('/recurringHistory', ['uses' => "RecurringTasksHistoryController@recurringHistoryForUser"]);
+    $router->post('/changeTimeframe', ['uses' => "RecurringTasksController@changeTimeFrame"]);
 });
 
 $router->group(['prefix' => 'forum'], function () use ($router){

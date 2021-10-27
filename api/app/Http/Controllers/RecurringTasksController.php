@@ -9,6 +9,7 @@ use DateTime;
 use Requests;
 use App\Models\StartedTasks;
 use App\Models\RecurringTasksHistory;
+use Exception;
 
 class RecurringTasksController extends Controller {
     public function getTasks(Request $request){
@@ -75,8 +76,20 @@ class RecurringTasksController extends Controller {
         ]);
 
         try {
-            RecurringTasksModel::where('id', '=', $request['id'])->delete();
-            return response()->json(array('success' => true), 200);
+            $task = RecurringTasksModel::where('id', '=', $request['id'])->get();
+            $dispatchId = $task[0]['dispatch_id'];
+            $url = "https://autoliv-eu2.leading2lean.com/api/1.0/dispatches/delete/$dispatchId/";
+            $headers = ['Content-type' => 'application/x-www-form-urlencoded'];
+            $options = ['auth' => 'ZjbBpxIq0qUYRoEOZkJYlNrEJL5Egkgh', 'site' => 15];
+
+            $l2lRequest = Requests::post($url, $headers, $options);
+            $response = json_decode($l2lRequest->body, 200);
+            if($response['success']){
+                RecurringTasksModel::where('id', '=', $request['id'])->delete();
+                return response()->json(array('success' => true), 200);
+            }else{
+                return response()->json(array('success' => false, 'error' => $response['error']));
+            }
         }catch (Throwable $t){
             return response()->json(array('success' => false, 'error' => $t), 200);
         }
@@ -243,31 +256,45 @@ class RecurringTasksController extends Controller {
             case "yearly": $machineCode = "Yearly Task"; $description = "Yearly task: " . $task; break;
         }
         $url = "https://autoliv-eu2.leading2lean.com/api/1.0/dispatches/open/";
-            $options = [
-                'auth' => "ZjbBpxIq0qUYRoEOZkJYlNrEJL5Egkgh",
-                'site' => 15,
-                'description' => $description,
-                'dispatchtypecode' => $machineCode,
-                'machinecode' => "IOT-General",
-                'tradecode' => 'Others',
-            ];
+        $options = [
+            'auth' => "ZjbBpxIq0qUYRoEOZkJYlNrEJL5Egkgh",
+            'site' => 15,
+            'description' => $description,
+            'dispatchtypecode' => $machineCode,
+            'machinecode' => "IOT-General",
+            'tradecode' => 'Others',
+        ];
 
-            $headers = ['Content-type' => 'application/x-www-form-urlencoded'];
+        $headers = ['Content-type' => 'application/x-www-form-urlencoded'];
 
-            $l2l_request = Requests::post($url, $headers, $options);
-            $response = json_decode($l2l_request->body, true);
+        $l2l_request = Requests::post($url, $headers, $options);
+        $response = json_decode($l2l_request->body, true);
 
-            if($response['success']){
-                $startTask = new StartedTasks();
-                $startTask->dispatch_id = $response['data']['id'];
-                $startTask->user_id = $userId;
-                $startTask->task_id = $taskId;
-                $startTask->timeframe = $timeframe;
-                $startTask->minutesSpent = 0;
-                $startTask->save();
-                return $response['data']['id'];
-            }else {
-                return false;
-            }
+        if($response['success']){
+            $startTask = new StartedTasks();
+            $startTask->dispatch_id = $response['data']['id'];
+            $startTask->user_id = $userId;
+            $startTask->task_id = $taskId;
+            $startTask->timeframe = $timeframe;
+            $startTask->minutesSpent = 0;
+            $startTask->save();
+            return $response['data']['id'];
+        }else {
+            return false;
+        }
+    }
+
+    public function changeTimeFrame(Request $request){
+        $this->validate($request, [
+            'task_id' => 'required',
+            'timeframe' => 'required'
+        ]);
+
+        try {
+            RecurringTasksModel::where('id', '=', $request['task_id'])->update(['recurring' => $request['timeframe']]);
+            return response()->json(array('success' => true), 200);
+        } catch (Exception $e){
+            return response()->json(array('success' => false, 'error' => $e), 200);
+        }
     }
 }

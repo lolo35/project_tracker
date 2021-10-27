@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col">
+    <div class="flex flex-col relative">
         <div class="flex items-center justify-between space-x-2 px-4 py-2 bg-gray-600 origin-top">
             <div class="flex flex-row items-center space-x-1">
                 <input type="checkbox" title="Complete Task" :checked="statusComputed" @click="completeTask()">
@@ -13,6 +13,26 @@
                 <i class="fas fa-trash-alt"></i>
             </button>
         </div>
+        <button class="absolute text-xs text-gray-300 left-1" title="Change timeframe..." @click="showEditTimeframe = !showEditTimeframe">
+            <i class="fas fa-history"></i>
+        </button>
+        <div class="absolute bg-gray-300 p-2 left-1 rounded top-4" v-if="showEditTimeframe">
+            <form class="flex flex-col space-y-1" @submit="changeTimeframe()">
+                <label for="changeTimeframe" class="text-xs font-semibold">Pick new timeframe</label>
+                <div class="flex flex-row">
+                    <select v-model="timeframe" id="changeTimeframe" class="rounded-l">
+                        <option value="daily" :selected="task.recurring == 'daily' ? true : false">Daily</option>
+                        <option value="weekly" :selected="task.recurring == 'weekly' ? true : false">Weekly</option>
+                        <option value="monthly" :selected="task.recurring == 'monthly' ? true : false">Monthly</option>
+                        <option value="quarterly" :selected="task.recurring == 'quarterly' ? true : false">Quarterly</option>
+                        <option value="yearly" :selected="task.recurring == 'yearly' ? true : false">Yearly</option>
+                    </select>
+                    <button type="submit" class="text-white bg-blue-500 rounded-r px-1">
+                        <i class="fas fa-check"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </template>
 
@@ -25,6 +45,8 @@ export default {
     data(){
         return {
             activeStatus: false,
+            showEditTimeframe: false,
+            timeframe: "",
         }
     },
     props: {
@@ -32,7 +54,7 @@ export default {
         index: Number,
         type: String,
     },
-    emits: ['taskDeleted'],
+    emits: ['taskDeleted', 'taskChangedTF'],
     created(){
         this.checkStatus();
     },
@@ -90,6 +112,23 @@ export default {
                 console.error(error);
             }
             
+        },
+        async changeTimeframe(){
+            event.preventDefault();
+            let formData = new FormData();
+            formData.append('task_id', this.task.id);
+            formData.append('timeframe', this.timeframe);
+
+            try {
+                const response = await axios.post(`${this.$store.state.url}recurring/changeTimeframe`, formData, { headers: { 'Content-type': 'application/x-www-form-urlencoded'}});
+                console.log(response.data);
+                if(response.data.success){
+                    this.$emit('taskChangedTF', {type: this.type, timeframe: this.timeframe, index: this.index,  task: this.task});
+                    this.showEditTimeframe = false;
+                }
+            } catch (error){
+                console.error(error);
+            }
         }
     },
     computed: {
