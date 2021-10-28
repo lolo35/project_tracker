@@ -10,6 +10,7 @@ use Requests;
 use App\Models\StartedTasks;
 use App\Models\RecurringTasksHistory;
 use Exception;
+use App\CustomClasses\L2lApi;
 
 class RecurringTasksController extends Controller {
     public function getTasks(Request $request){
@@ -78,18 +79,33 @@ class RecurringTasksController extends Controller {
         try {
             $task = RecurringTasksModel::where('id', '=', $request['id'])->get();
             $dispatchId = $task[0]['dispatch_id'];
-            $url = "https://autoliv-eu2.leading2lean.com/api/1.0/dispatches/delete/$dispatchId/";
-            $headers = ['Content-type' => 'application/x-www-form-urlencoded'];
-            $options = ['auth' => 'ZjbBpxIq0qUYRoEOZkJYlNrEJL5Egkgh', 'site' => 15];
+            $l2lapi = new L2lApi($dispatchId);
+            $dispatchData = $l2lapi->getDispatchesById();
+            $description = $dispatchData['data']['description'];
 
-            $l2lRequest = Requests::post($url, $headers, $options);
-            $response = json_decode($l2lRequest->body, 200);
-            if($response['success']){
-                RecurringTasksModel::where('id', '=', $request['id'])->delete();
-                return response()->json(array('success' => true), 200);
-            }else{
-                return response()->json(array('success' => false, 'error' => $response['error']));
+            $l2lapi = new L2lApi($dispatchId);
+            $status = $l2lapi->updateDispatchDescription($dispatchId, $description, "(deleted)");
+            if($status['success']){
+                $complete = $l2lapi->completeDispatch($dispatchId);
+                if($complete['success']){
+                    RecurringTasksModel::where('id', '=', $request['id'])->delete();
+                    return response()->json(array('success' => true), 200);
+                }else{
+                    return response()->json(array('success' => false, 'error' => $complete['error']));
+                }
             }
+            // $url = "https://autoliv-eu2.leading2lean.com/api/1.0/dispatches/delete/$dispatchId/";
+            // $headers = ['Content-type' => 'application/x-www-form-urlencoded'];
+            // $options = ['auth' => 'ZjbBpxIq0qUYRoEOZkJYlNrEJL5Egkgh', 'site' => 15];
+
+            // $l2lRequest = Requests::post($url, $headers, $options);
+            // $response = json_decode($l2lRequest->body, 200);
+            // if($response['success']){
+            //     RecurringTasksModel::where('id', '=', $request['id'])->delete();
+            //     return response()->json(array('success' => true), 200);
+            // }else{
+            //     return response()->json(array('success' => false, 'error' => $response['error']));
+            // }
         }catch (Throwable $t){
             return response()->json(array('success' => false, 'error' => $t), 200);
         }
