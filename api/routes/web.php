@@ -45,6 +45,7 @@ $router->group(['prefix' => 'projects'], function() use($router) {
     $router->get('/projectDetails', ['uses' => "ProjectsController@getTasksForProject"]);
     $router->post('/changePriority', ['uses' => "ProjectsController@changePriority"]);
     $router->get('/priorityHistory', ['uses' => "ProjectsController@getProjectHistory"]);
+    $router->get('/projectById', ['uses' => "ProjectsController@getProjectById"]);
 });
 
 $router->group(['prefix' => 'recurring'], function () use($router){
@@ -67,4 +68,11 @@ $router->group(['prefix' => 'forum'], function () use ($router){
     $router->get('/topicDiscution', ['uses' => "ForumPostsController@getTopicDiscution"]);
     $router->post('/postReply', ['uses' => "ForumPostsController@postReply"]);
     $router->post('/addView', ['uses' => 'ForumPostsController@addView']);
+});
+
+$router->group(['prefix' => 'issues'], function () use ($router){
+    $router->get('/countIssues', ['uses' => "IssuesController@countIssues"]);
+    $router->post('/addIssue', ['uses' => "IssuesController@addIssue"]);
+    $router->get('/issuesForProject', ['uses' => "IssuesController@fetchIssues"]);
+    $router->post('/closeIssue', ['uses' => "IssuesController@closeIssue"]);
 });

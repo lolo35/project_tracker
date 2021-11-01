@@ -89,6 +89,14 @@ const routes = [
         components: {
           home: () => import('../views/Issues.vue')
         }
+      },
+      {
+        name: "ProjectIssues",
+        path: "/issues/:project_id",
+        components: {
+          home: () => import('../components/Issues/ProjectIssues.vue'),
+        },
+        props: true,
       }
     ]
   },

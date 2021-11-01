@@ -133,4 +133,17 @@ class ProjectsController extends Controller {
             return response()->json(array('success' => false, 'error' => $e), 200);
         }
     }
+
+    public function getProjectById(Request $request){
+        $this->validate($request, [
+            'project_id' => 'required'
+        ]);
+
+        try {
+            $data = ProjectsModel::where('id', '=', $request['project_id'])->get();
+            return response()->json(array('success' => true, 'data' => $data), 200);
+        } catch (Exception $e){
+            return response()->json(array('success' => false, 'error' => $e), 200);
+        }
+    }
 }
