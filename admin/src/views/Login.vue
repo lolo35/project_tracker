@@ -51,11 +51,15 @@
                                 </p>
                             </div>
                         </div>
-                        <div class="w-full py-3">
-                            <button class="bg-blue-500 text-white w-full rounded px-4 py-2">
+                        <div class="py-3 flex flex-row">
+                            <button class="bg-blue-500 hover:bg-blue-600 text-white w-full rounded-l px-4 py-2">
                                 <i class="fas fa-sign-in-alt"></i>
                                 Submit
                             </button>
+                            <router-link to="/createUser" class="bg-indigo-500 hover:bg-indigo-600 w-full px-4 py-2 text-white rounded-r text-center">
+                                <i class="fas fa-user-plus"></i>
+                                Create user
+                            </router-link>
                         </div>
                     </form>
                 </div>
@@ -88,6 +92,7 @@ export default {
                         'Content-type': 'application/x-www-form-urlencoded'
                     }
                 });
+                console.log(response.data);
                 if(response.data.success){
                     console.log(response.data.user);
                     localforage.setItem('name', response.data.user.name).then( value => {

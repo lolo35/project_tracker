@@ -1,12 +1,17 @@
 {
     "name": "laravel/lumen",
     "description": "The Laravel Lumen Framework.",
-    "keywords": ["framework", "laravel", "lumen"],
+    "keywords": [
+        "framework",
+        "laravel",
+        "lumen"
+    ],
     "license": "MIT",
     "type": "project",
     "require": {
         "php": "^7.3|^8.0",
         "laravel/lumen-framework": "^8.0",
+        "phpmailer/phpmailer": "^6.5",
         "rmccue/requests": "^1.8",
         "shuchkin/simplexlsx": "^0.8.26"
     },

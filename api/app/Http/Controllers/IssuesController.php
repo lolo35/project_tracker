@@ -57,8 +57,8 @@ class IssuesController extends Controller {
             //$data = Issues::where('project_id', '=', $request['project_id'])->get();
             $data = DB::table('issues')
                 ->join('users as opened_by', 'issues.opened_by', '=', 'opened_by.id')
-                ->join('users as closed_by', 'issues.closed_by', '=', 'closed_by.id')
-                ->select('issues.*', 'opened_by.name as open_name', 'opened_by.autoliv_id as open_autolivid', 'closed_by.name as close_name', 'closed_by.autoliv_id as close_autolivid')
+                //->join('users as closed_by', 'issues.closed_by', '=', 'closed_by.id')
+                ->select('issues.*', 'opened_by.name as open_name', 'opened_by.autoliv_id as open_autolivid')//, 'closed_by.name as close_name', 'closed_by.autoliv_id as close_autolivid')
                 ->where('issues.project_id', '=', $request['project_id'])
                 ->get();
             return response()->json(array('success' => true, 'data' => $data), 200);

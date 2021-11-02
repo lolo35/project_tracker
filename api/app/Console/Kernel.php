@@ -22,6 +22,7 @@ class Kernel extends ConsoleKernel
         Commands\MonthlyTasksCommand::class,
         Commands\QuarterlyTasksCommand::class,
         Commands\YearlyTasksCommand::class,
+        Commands\TestCommand::class,
     ];
 
     /**

@@ -28,4 +28,34 @@ class UsersController extends Controller {
             return response()->json(array('success' => false, 'error' => $e), 200);
         }
     }
+
+    public function createUser(Request $request){
+        $this->validate($request, [
+            'name' => 'required',
+            'email' => 'required',
+            'autolivId' => 'required',
+            'password' => 'required',
+        ]);
+
+        $password = hash('sha512', $request['password']);
+        try {
+            $check = User::where('email', '=', $request['email'])->get();
+            if($check->isEmpty()){
+                $insert = new User();
+                $insert->name = $request['name'];
+                $insert->email = $request['email'];
+                $insert->password = $password;
+                $insert->autoliv_id = $request['autolivId'];
+                if($insert->save()){
+                    return response()->json(array('success' => true), 200);
+                }else{
+                    return response()->json(array('success' => false, 'error' => 'userCreation'), 200);
+                }
+            }else{
+                return response()->json(array('success' => false, 'error' => 'userExists'), 200);
+            }
+        } catch (Exception $e){
+            return response()->json(array('success' => false, 'error' => $e), 200);
+        }
+    }
 }
