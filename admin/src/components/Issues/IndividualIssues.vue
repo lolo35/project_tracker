@@ -39,6 +39,11 @@ import axios from 'axios';
 
 export default {
     name: "IndividualIssues",
+    data(){
+        return {
+            closed_by: "",
+        }
+    },
     props: {
         issue: String,
         description: String,
@@ -46,9 +51,11 @@ export default {
         opened_by: String,
         id: Number,
         index: Number,
-        closed_by: String,
     },
     emits: ['issueClosed'],
+    created(){
+        this.fetchClosedBy();
+    },
     methods: {
         closeIssue(){
             Swal.fire({
@@ -74,6 +81,19 @@ export default {
             console.log(response.data);
             if(response.data.success){
                 this.$emit('issueClosed', {index: this.index});
+            }
+        },
+        async fetchClosedBy(){
+            if(!this.open){
+                try {
+                    const response = await axios.get(`${this.$store.state.url}issues/closedBy?issue_id=${this.id}`);
+                    console.log(response.data);
+                    if(response.data.success){
+                        this.closed_by = response.data.data[0].name;
+                    }
+                } catch (error){
+                    console.log(error);
+                }
             }
         }
     },

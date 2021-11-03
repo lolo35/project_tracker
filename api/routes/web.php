@@ -76,4 +76,5 @@ $router->group(['prefix' => 'issues'], function () use ($router){
     $router->post('/addIssue', ['uses' => "IssuesController@addIssue"]);
     $router->get('/issuesForProject', ['uses' => "IssuesController@fetchIssues"]);
     $router->post('/closeIssue', ['uses' => "IssuesController@closeIssue"]);
+    $router->get('/closedBy', ['uses' => "IssuesController@fetchClosedBy"]);
 });

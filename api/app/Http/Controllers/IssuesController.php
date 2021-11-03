@@ -39,8 +39,8 @@ class IssuesController extends Controller {
             $insert->save();
             
             $data = DB::table('issues')
-                ->join('users', 'issues.opened_by', '=', 'users.id')
-                ->select('issues.*', 'users.name', 'users.autoliv_id')
+                ->join('users as opened_by', 'issues.opened_by', '=', 'opened_by.id')
+                ->select('issues.*', 'opened_by.name as open_name', 'opened_by.autoliv_id as open_autolivid')
                 ->where('issues.id', '=', $insert['id'])
                 ->get();
             return response()->json(array('success' => true, 'data' => $data), 200);
@@ -62,6 +62,24 @@ class IssuesController extends Controller {
                 ->where('issues.project_id', '=', $request['project_id'])
                 ->get();
             return response()->json(array('success' => true, 'data' => $data), 200);
+        } catch (Exception $e){
+            return response()->json(array('success' => false, 'error' => $e), 200);
+        }
+    }
+
+    public function fetchClosedBy(Request $request){
+        $this->validate($request, [
+            'issue_id' => 'required',
+        ]);
+
+        try {
+            $data = DB::table('issues')
+                ->join('users', 'issues.closed_by', '=', 'users.id')
+                ->select('issues.closed_by', 'users.name')
+                ->where('issues.id', '=', $request['issue_id'])
+                ->get();
+            return response()->json(array('success' => true, 'data' => $data), 200);
+
         } catch (Exception $e){
             return response()->json(array('success' => false, 'error' => $e), 200);
         }

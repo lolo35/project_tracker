@@ -2,7 +2,7 @@
 	<navbar></navbar>
 	<main class="flex w-full h-screen">
 		<sidebar></sidebar>
-		<section class="w-full p-4" v-if="$store.state.user.userLoaded">
+		<section class="w-full p-4 overflow-scroll" v-if="$store.state.user.userLoaded">
 			<router-view name="home"></router-view>
 		</section>
 	</main>

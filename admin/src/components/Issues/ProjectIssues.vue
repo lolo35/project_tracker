@@ -24,7 +24,6 @@
                 :description="issue.description"
                 :status="parseInt(issue.status)"
                 :opened_by="issue.open_name"
-                :closed_by="issue.close_name"
                 :id="parseInt(issue.id)"
                 :index="index"
             ></individual-issues>
