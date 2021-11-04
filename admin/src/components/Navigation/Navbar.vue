@@ -3,7 +3,7 @@
         <nav class="flex items-center">
             <img class="w-7 h-7" :src="`${url}images/pngwing.com.png`" alt="">
             <div class="text-white text-xs hidden sm:block ml-2">
-                <a href="" class="bg-gray-900 hover:bg-gray-700 p-2 rounded cursor-pointer">Dashboard</a>
+                <router-link to="/dashboard" class="bg-gray-900 hover:bg-gray-700 p-2 rounded cursor-pointer">Dashboard</router-link>
                 <router-link to="/projects" class="bg-gray-900 hover:bg-gray-700 p-2 rounded cursor-pointer ml-1">Projects</router-link>
                 <router-link to="/issues" class="bg-gray-900 hover:bg-gray-700 p-2 rounded cursor-pointer ml-1">Issues</router-link>
                 <router-link to="/discustionboard"  class="bg-gray-900 hover:bg-gray-700 p-2 rounded cursor-pointer ml-1">Boards</router-link>

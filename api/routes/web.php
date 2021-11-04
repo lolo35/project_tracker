@@ -78,3 +78,11 @@ $router->group(['prefix' => 'issues'], function () use ($router){
     $router->post('/closeIssue', ['uses' => "IssuesController@closeIssue"]);
     $router->get('/closedBy', ['uses' => "IssuesController@fetchClosedBy"]);
 });
+
+$router->group(['prefix' => 'charts'], function () use ($router) {
+    $router->get('/tasksSummary', ['uses' => "ChartsController@countTasks"]);
+    $router->get('/taskCountEvolution', ['uses' => "ChartsController@taskCountEvolution"]);
+    $router->get('/latestIssues', ['uses' => "ChartsController@latestIssues"]);
+    $router->get('/issueCount', ['uses' => "ChartsController@countIssues"]);
+    $router->get('/latestProjects', ['uses' => "ChartsController@latestProjects"]);
+});

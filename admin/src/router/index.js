@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 const routes = [
   {
     path: '/',
+    redirect: '/dashboard',
     name: 'Home',
     components: {
       default: Home,
@@ -97,6 +98,13 @@ const routes = [
           home: () => import('../components/Issues/ProjectIssues.vue'),
         },
         props: true,
+      },
+      {
+        name: "Dashboard",
+        path: "/dashboard",
+        components: {
+          home: () => import('../views/Dashboard.vue'),
+        }
       }
     ]
   },
