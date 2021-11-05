@@ -27,19 +27,23 @@ export default {
         return {
             ongoingTasks: [],
             showTasks: false,
+            interval: "",
         }
     },
     created(){
         this.fetchTasks();
-        setInterval(() => {
+        this.interval = setInterval(() => {
             this.fetchTasks();
         }, 60000);
+    },
+    unmounted(){
+        clearInterval(this.interval);
     },
     methods: {
         async fetchTasks(){
             try {
                 const response = await axios.get(`${this.$store.state.url}teams/workingTasks`);
-                console.log(response.data);
+                //console.log(response.data);
                 if(response.data.success){
                     this.ongoingTasks = response.data.data;
                     this.showTasks = true;

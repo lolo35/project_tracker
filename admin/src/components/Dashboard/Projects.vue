@@ -23,19 +23,23 @@ export default {
         return {
             projectData: [],
             showProjects: false,
+            interval: "",
         }
     },
     created(){
         this.fetchLatestProjects();
-        setInterval(() => {
+        this.interval = setInterval(() => {
             this.fetchLatestProjects();
         }, 60000);
+    },
+    unmounted(){
+        clearInterval(this.interval);
     },
     methods: {
         async fetchLatestProjects(){
             try {
                 const response = await axios.get(`${this.$store.state.url}charts/latestProjects`);
-                console.log(response.data);
+                //console.log(response.data);
                 if(response.data.success){
                     this.projectData = response.data.data;
                     this.showProjects = true;

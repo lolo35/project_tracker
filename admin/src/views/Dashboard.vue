@@ -9,15 +9,18 @@
                     :key="pieChartKey"
                 ></pie-chart>
             </div>
-            <div class="bg-white border-px-3 py-1 shadow w-2/3">
+            <div class="bg-white border-px-3 py-1 shadow w-2/3 relative">
                 <column-chart
                     v-if="showBarChart"
                     :chartData="this.tasksEvolutionData"
                     :chartOptions="barChartOptions"
                     :key="columnChartKey"
                 >
-
                 </column-chart>
+                <div class="absolute top-0 bottom-0 left-0 right-0 bg-black opacity-25" v-if="!showBarChart"></div>
+                <div class="absolute top-1/2 left-1/2" v-if="!showBarChart">
+                    <i class="fas fa-spinner fa-2x font-bold animate-spin"></i>
+                </div>
             </div>
         </div>
         <div class="flex flex-row space-x-2 w-full">
@@ -56,6 +59,7 @@ export default {
             showIssues: false,
             columnChartKey: 0,
             pieChartKey: 0,
+            tasksInterval: "",
         }
     },
     components: {
@@ -68,10 +72,13 @@ export default {
     created() {
         this.fetchTasksData();
         this.fetchTasksEvolution();
-        setInterval(() => {
+        this.tasksInterval = setInterval(() => {
             this.fetchTasksData();
             this.fetchTasksEvolution();
         }, 60000);
+    },
+    unmounted(){
+        clearInterval(this.tasksInterval);
     },
     methods: {
         async fetchTasksData(){
@@ -95,10 +102,12 @@ export default {
         },
         async fetchTasksEvolution(){
             try {
-                this.tasksEvolutionData = [];
+                
                 const response = await axios.get(`${this.$store.state.url}charts/taskCountEvolution`);
                 //console.log(response.data);
                 if(response.data.success){
+                    this.showBarChart = false;
+                    this.tasksEvolutionData = [];
                     this.tasksEvolutionData.push(['Day', 'Ammount']);
                     for(const property in response.data.doneTasks){
                         console.log(property, response.data.doneTasks[property]);

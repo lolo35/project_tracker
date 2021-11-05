@@ -33,21 +33,25 @@ export default {
             showIssues: false,
             openIssues: 0,
             closedIssues: 0,
+            interval: "",
         }
     },
     created() {
         this.fetchIssuesData();
         this.issueCount();
-        setInterval(() => {
+        this.Interval = setInterval(() => {
             this.fetchIssuesData();
             this.issueCount();
         }, 60000);
+    },
+    unmounted(){
+        clearInterval(this.interval);
     },
     methods: {
         async fetchIssuesData(){
             try {
                 const response = await axios.get(`${this.$store.state.url}charts/latestIssues`);
-                console.log(response.data);
+                //console.log(response.data);
                 if(response.data.success){
                     this.latestIssues = response.data.data;
                     this.showIssues = true;
@@ -59,7 +63,7 @@ export default {
         async issueCount(){
             try{
                 const response = await axios.get(`${this.$store.state.url}charts/issueCount`);
-                console.log(response.data);
+                //console.log(response.data);
                 if(response.data.success){
                     this.openIssues = response.data.openIssues[0].total;
                     this.closedIssues = response.data.closedIssues[0].total;
