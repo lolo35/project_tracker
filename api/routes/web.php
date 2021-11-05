@@ -38,6 +38,8 @@ $router->group(['prefix' => 'user'], function() use ($router){
     $router->post('/editTaskDescription', ['uses' => "TasksController@editTaskDescription"]);
     $router->post('/createUser', ['uses' => "UsersController@createUser"]);
     $router->post('/changePass', ['uses' => "UsersController@changePassword"]);
+    $router->post('/changeEmail', ['uses' => "UsersController@changeEmail"]);
+    $router->post('/changeAutolivId', ['uses' => "UsersController@changeAutolivId"]);
 });
 
 $router->group(['prefix' => 'projects'], function() use($router) {

@@ -80,4 +80,32 @@ class UsersController extends Controller {
             return response()->json(array('success' => false, 'error' => $e), 200);
         }
     }
+
+    public function changeEmail(Request $request){
+        $this->validate($request, [
+            'user_id' => 'required',
+            'email' => 'required'
+        ]);
+
+        try {
+            User::where('id', '=', $request['user_id'])->update(['email' => $request['email']]);
+            return response()->json(array('success' => true), 200);
+        } catch (Exception $e){
+            return response()->json(array('success' => false, 'error' => $e), 200);
+        }
+    }
+
+    public function changeAutolivId(Request $request){
+        $this->validate($request, [
+            'user_id' => 'required',
+            'newAutoliv_id' => 'required',
+        ]);
+
+        try {
+            User::where('id', '=', $request['user_id'])->update(['autoliv_id' => $request['newAutoliv_id']]);
+            return response()->json(array('success' => true), 200);
+        } catch (Exception $e){
+            return response()->json(array('success' => false, 'error' => $e), 200);
+        }
+    }
 }

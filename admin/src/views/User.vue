@@ -5,13 +5,66 @@
                 <img :src="`${$store.state.url}images/no-photo.jpg`" alt="user" :title="$store.state.user.name">
                 <div class="flex flex-row items-center justify-between">
                     <h3 class="text-lg font-semibold">{{ $store.state.user.name }}</h3>
-                    <button title="Change photo..." class="bg-blue-500 rounded-full text-white w-6 h-6 hover:bg-blue-700">
+                    <button title="Change photo..." class="w-6 h-6 hover:text-gray-500">
                         <i class="far fa-image"></i>
                     </button>
                 </div>
+                <div class="flex flex-row">
+                    <div class="flex flex-col space-y-1 w-full">
+                        <label for="email" class="text-sm text-gray-500 italic relative">
+                            Email
+                            <button class="absolute right-0 -top-1 hover:text-gray-500" v-if="showChangeEmailInput" @click="showChangeEmailInput = false">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </label>
+                        <div class="flex flex-row items-center justify-between w-full" v-if="!showChangeEmailInput">
+                            <p class="font-semibold" id="email">{{ $store.state.user.email }}</p>
+                            <button class="w-6 h-6 hover:text-gray-500" title="Edit email..." @click="showChangeEmailInput = true">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </div>
+                        <form class="flex flex-row items-center w-full" @submit="changeEmail()" v-if="showChangeEmailInput">
+                            <div class="flex flex-col">
+                                <div class="flex flex-row">
+                                    <input type="email" class="border rounded-l px-3 py-1" required v-model="newEmail">
+                                    <button type="submit" class="rounded-r bg-blue-500 text-white px-2 py-1 border border-blue-500">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                </div>
+                                <div class="flex flex-row">
+                                    <span class="text-xs text-gray-300 italic">Please enter your new email adrress</span>
+                                </div>
+                            </div>
+                        </form>
+
+                        <label for="autoliv_id" class="text-sm text-gray-500 italic relative">
+                            Autoliv ID
+                            <button class="absolute right-0 -top-1 hover:text-gray-500" v-if="showChangeAutolivIdInput" @click="showChangeAutolivIdInput = false">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </label>
+                        <div class="flex flex-row items-center justify-between w-full" v-if="!showChangeAutolivIdInput">
+                            <p class="font-semibold" id="autoliv_id">{{ $store.state.user.autoliv_id }}</p>
+                            <button class="w-6 h-6 hover:text-gray-500" title="Edit autoliv ID" @click="showChangeAutolivIdInput = true">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </div>
+
+                        <form class="flex flex-row items-center w-full" @submit="changeAutolivId()" v-if="showChangeAutolivIdInput">
+                            <div class="flex flex-col">
+                                <div class="flex flex-row">
+                                    <input type="text" class="border rounded-l px-3 py-1" required v-model="newAutolivId">
+                                    <button type="submit" class="border border-blue-500 bg-blue-500 text-white px-2 py-1 rounded-r">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
             <div class="flex flex-col bg-white shadow border px-3 py-1 w-1/5">
-                <form class="flex flex-col space-y-1" @submit="changePass()">
+                <form class="flex flex-col space-y-1 justify-between" @submit="changePass()">
                     <h3 class="text-lg font-semibold">Password change</h3>
                     <label for="old_password" class="text-gray-500 font-semibold">Current password</label>
                     <input id="old_password" type="password" class="px-3 py-1 border rounded" required v-model="currentPass">
@@ -47,10 +100,30 @@ export default {
             confNewPass: "",
             passed: 0,
             msg: "Please enter your new password",
-            txtColor: "text-gray-300"
+            txtColor: "text-gray-300",
+            showChangeEmailInput: false,
+            showChangeAutolivIdInput: false,
+            newEmail: "",
+            newAutolivId: "",
         }
     },
     methods: {
+        async changeAutolivId(){
+            event.preventDefault();
+            let formData = new FormData();
+            formData.append('user_id', this.$store.state.user.userId);
+            formData.append('newAutoliv_id', this.newAutolivId);
+            try {
+                const response = await axios.post(`${this.$store.state.url}user/changeAutolivId`, formData, { headers: { 'Content-type': 'application/x-www-form-urlencoded' }});
+                console.log(response.data);
+                if(response.data.success){
+                    this.showChangeAutolivIdInput = false;
+                    this.$store.dispatch('user/setAutolivId', this.newAutolivId);
+                }
+            } catch (error){
+                console.error(error);
+            }
+        },
         async changePass(){
             event.preventDefault();
             if(this.passed >= 3){
@@ -85,6 +158,22 @@ export default {
             }else{
                 this.msg = "Password complexity does not meet minimum requirments";
                 this.txtColor = "text-red-500";
+            }
+        },
+        async changeEmail(){
+            event.preventDefault();
+            let formData = new FormData();
+            formData.append('user_id', this.$store.state.user.userId);
+            formData.append('email', this.newEmail);
+            try {
+                const response = await axios.post(`${this.$store.state.url}user/changeEmail`, formData, { headers: { 'Content-type': 'application/x-www-form-urlencoded' }});
+                console.log(response.data);
+                if(response.data.success){
+                    this.$store.dispatch('user/setEmail', this.newEmail);
+                    this.showChangeEmailInput = false;
+                }
+            } catch (error){
+                console.error(error);
             }
         },
         resetInput(){
