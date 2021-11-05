@@ -8,6 +8,13 @@
             <div class="flex flex-row items-center justify-between w-full">
                 <p class="text-xs font-semibold text-gray-400">Opened by: {{ opened_by }}</p>                
             </div>
+            <div class="flex flex-row items-center justify-between w-full" v-if="!open && closedByLoaded">
+                <div class="flex flex-col">
+                    <p class="text-xs font-semibold text-gray-400">
+                        Closing reason: <span class="italic font-bold text-gray-500">{{ closed_by[0].reason }}</span>
+                    </p>
+                </div>
+            </div>
             <div class="flex flex-row">
                 <button class="bg-green-300 rounded text-green-600 px-1 hover:bg-green-400 hover:text-green-700" v-if="open" @click="closeIssue()">
                     <i class="fas fa-check"></i>
@@ -26,8 +33,8 @@
                     Closed
                 </div>
             </div>
-            <div class="flex flex-row items-end h-full">
-                <p class="text-xs font-semibold text-gray-400">Closed by: {{ closed_by }}</p>
+            <div class="flex flex-row items-end h-full" v-if="!open && closedByLoaded">
+                <p class="text-xs font-semibold text-gray-400">Closed by: {{ closed_by[0].name }}</p>
             </div>
         </div>
     </div>
@@ -41,7 +48,8 @@ export default {
     name: "IndividualIssues",
     data(){
         return {
-            closed_by: "",
+            closed_by: Array,
+            closedByLoaded: false,
         }
     },
     props: {
@@ -64,19 +72,23 @@ export default {
                         <p>Are you sure you want to close this issue?</p>
                         <blockquote class="p-4 italic border-l-4 bg-gray-100">${ this.issue }</blockquote>
                     </div>`,
+                input: 'text',
+                inputPlaceholder: "Enter reason...",
                 showCancelButton: true,
                 cancelButtonColor: "red",
                 confirmButtonText: "Yes",
             }).then((isConfirmed) => {
                 if(isConfirmed.value){
-                    this.postCloseIssue();
+                    //console.log();
+                    this.postCloseIssue(isConfirmed.value);
                 }
             });
         },
-        async postCloseIssue(){
+        async postCloseIssue(inpVal){
             let formData = new FormData();
             formData.append('issue_id', this.id);
             formData.append('user_id', this.$store.state.user.userId);
+            formData.append('reason', inpVal);
             const response = await axios.post(`${this.$store.state.url}issues/closeIssue`, formData, { headers: { 'Content-type': 'application/x-www-form-urlencoded' }});
             console.log(response.data);
             if(response.data.success){
@@ -89,7 +101,8 @@ export default {
                     const response = await axios.get(`${this.$store.state.url}issues/closedBy?issue_id=${this.id}`);
                     console.log(response.data);
                     if(response.data.success){
-                        this.closed_by = response.data.data[0].name;
+                        this.closed_by = response.data.data;
+                        this.closedByLoaded = true;
                     }
                 } catch (error){
                     console.log(error);

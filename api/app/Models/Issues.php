@@ -4,6 +4,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Issues extends Model {
     protected $table = "issues";
-    protected $fillable = ['project_id', 'status', 'issue', 'description', 'opened_by', 'closed_by'];
+    protected $fillable = ['project_id', 'status', 'issue', 'description', 'opened_by', 'closed_by', 'reason'];
     protected $hidden = [];
 }

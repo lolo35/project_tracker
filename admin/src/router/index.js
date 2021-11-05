@@ -105,6 +105,13 @@ const routes = [
         components: {
           home: () => import('../views/Dashboard.vue'),
         }
+      },
+      {
+        name: "User",
+        path: "/userSettings",
+        components: {
+          home: () => import('../views/User.vue')
+        }
       }
     ]
   },

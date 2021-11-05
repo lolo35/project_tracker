@@ -58,4 +58,26 @@ class UsersController extends Controller {
             return response()->json(array('success' => false, 'error' => $e), 200);
         }
     }
+
+    public function changePassword(Request $request){
+        $this->validate($request, [
+            'user_id' => 'required',
+            'current_password' => 'required',
+            'new_password' => 'required',
+        ]);
+
+        try {
+            $user = User::where('id', '=', $request['user_id'])->get()->makeVisible('password')->toArray();
+            $password = hash('sha512', $request['current_password']);
+            if($user[0]['password'] === $password){
+                $newPass = hash('sha512', $request['new_password']);
+                User::where('id', '=', $request['user_id'])->update(['password' => $newPass]);
+                return response()->json(array('success' => true), 200);
+            }else{
+                return response()->json(array('success' => false, 'error' => 'wrongPass'), 200);
+            }
+        } catch (Exception $e){
+            return response()->json(array('success' => false, 'error' => $e), 200);
+        }
+    }
 }

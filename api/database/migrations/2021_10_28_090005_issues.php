@@ -22,6 +22,7 @@ class Issues extends Migration
             $table->integer('status');
             $table->integer('opened_by');
             $table->integer('closed_by')->nullable();
+            $table->string('reason')->nullable();
             $table->timestamps();
         });
     }

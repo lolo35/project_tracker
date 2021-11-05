@@ -11,8 +11,8 @@ import forumTopics from './Forum/topics';
 
 export default createStore({
   state: {
-    url: "http://localhost/lumen/project_mgmt/public/",
-    //url: "http://artl-app04/timely/api/public/",
+    //url: "http://localhost/lumen/project_mgmt/public/",
+    url: "http://artl-app04/timely/api/public/",
     isLogged: false,
   },
   mutations: {

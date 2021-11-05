@@ -75,7 +75,7 @@ class IssuesController extends Controller {
         try {
             $data = DB::table('issues')
                 ->join('users', 'issues.closed_by', '=', 'users.id')
-                ->select('issues.closed_by', 'users.name')
+                ->select('issues.closed_by','issues.reason', 'users.name')
                 ->where('issues.id', '=', $request['issue_id'])
                 ->get();
             return response()->json(array('success' => true, 'data' => $data), 200);
@@ -89,10 +89,16 @@ class IssuesController extends Controller {
         $this->validate($request, [
             'issue_id' => 'required',
             'user_id' => 'required',
+            'reason' => 'required'
         ]);
 
         try {
-            Issues::where('id', '=', $request['issue_id'])->update(['status' => 0, 'closed_by' => $request['user_id']]);
+            Issues::where('id', '=', $request['issue_id'])->update(
+                [
+                    'status' => 0, 
+                    'closed_by' => $request['user_id'],
+                    'reason' => $request['reason'],
+            ]);
             return response()->json(array('success' => true), 200);
         } catch (Exception $e){
             return response()->json(array('success' => false, 'error' => $e), 200);
