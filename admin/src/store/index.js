@@ -11,18 +11,24 @@ import forumTopics from './Forum/topics';
 
 export default createStore({
   state: {
-    url: "http://localhost/lumen/project_mgmt/public/",
-    //url: "http://artl-app04/timely/api/public/",
+    //url: "http://localhost/lumen/project_mgmt/public/",
+    url: "",
     isLogged: false,
   },
   mutations: {
     setIsLogged(state){
       state.isLogged = !state.isLogged;
+    },
+    setUrl(state, value){
+      state.url = value;
     }
   },
   actions: {
     setIsLogged({ commit }){
       commit('setIsLogged');
+    },
+    setUrl({ commit }, value){
+      commit('setUrl', value);
     }
   },
   modules: {

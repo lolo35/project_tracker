@@ -65,77 +65,102 @@
             <div v-if="dailyTasks.length > 0">
                 <div class="flex items-center justify-between">
                     <h3 class="text-lg font-semibold text-gray-200">Daily Tasks</h3>
+                    <button class="text-blue-500 mr-3" @click="showDailyTasks = !showDailyTasks">
+                        <i class="fas" :class="{'fa-angle-double-down': !showDailyTasks, 'fa-angle-double-up': showDailyTasks}"></i>
+                    </button>
                 </div>
-                <daily-tasks
-                    v-for="(task, index) in dailyTasks"
-                    :index="index"
-                    :key="task.id"
-                    :task="task"
-                    :userId="userId"
-                    :type="'daily'"
-                    v-on:taskChangedTF="changeTaskTimeframe"
-                    v-on:taskDeleted="removeTask"
-                ></daily-tasks>
+                <div v-if="showDailyTasks">
+                    <daily-tasks
+                        v-for="(task, index) in dailyTasks"
+                        :index="index"
+                        :key="task.id"
+                        :task="task"
+                        :userId="userId"
+                        :type="'daily'"
+                        v-on:taskChangedTF="changeTaskTimeframe"
+                        v-on:taskDeleted="removeTask"
+                    ></daily-tasks>
+                </div>
             </div>
             <div v-if="weeklyTasks.length > 0">
                 <div class="flex items-center justify-between">
                     <h3 class="text-lg font-semibold text-gray-200">Weekly Tasks</h3>
+                    <button class="text-blue-500 mr-3" @click="showWeeklyTasks = !showWeeklyTasks">
+                        <i class="fas" :class="{'fa-angle-double-down': !showWeeklyTasks, 'fa-angle-double-up': showWeeklyTasks}"></i>
+                    </button>
                 </div>
-                <daily-tasks
-                    v-for="(task, index) in weeklyTasks"
-                    :index="index"
-                    :key="task.id"
-                    :task="task"
-                    :userId="userId"
-                    :type="'weekly'"
-                    v-on:taskChangedTF="changeTaskTimeframe"
-                    v-on:taskDeleted="removeTask"
-                ></daily-tasks>
+                <div v-if="showWeeklyTasks">
+                    <daily-tasks
+                        v-for="(task, index) in weeklyTasks"
+                        :index="index"
+                        :key="task.id"
+                        :task="task"
+                        :userId="userId"
+                        :type="'weekly'"
+                        v-on:taskChangedTF="changeTaskTimeframe"
+                        v-on:taskDeleted="removeTask"
+                    ></daily-tasks>
+                </div>
             </div>
              <div v-if="monthlyTasks.length > 0">
                 <div class="flex items-center justify-between">
                     <h3 class="text-lg font-semibold text-gray-200">Monthly Tasks</h3>
+                    <button class="text-blue-500 mr-3" @click="showMonthlyTasks = !showMonthlyTasks">
+                        <i class="fas" :class="{'fa-angle-double-down': !showMonthlyTasks, 'fa-angle-double-up': showMonthlyTasks}"></i>
+                    </button>
                 </div>
-                <daily-tasks
-                    v-for="(task, index) in monthlyTasks"
-                    :index="index"
-                    :key="task.id"
-                    :task="task"
-                    :userId="userId"
-                    :type="'monthly'"
-                    v-on:taskChangedTF="changeTaskTimeframe"
-                    v-on:taskDeleted="removeTask"
-                ></daily-tasks>
+                <div v-if="showMonthlyTasks">
+                    <daily-tasks
+                        v-for="(task, index) in monthlyTasks"
+                        :index="index"
+                        :key="task.id"
+                        :task="task"
+                        :userId="userId"
+                        :type="'monthly'"
+                        v-on:taskChangedTF="changeTaskTimeframe"
+                        v-on:taskDeleted="removeTask"
+                    ></daily-tasks>
+                </div>
             </div>
             <div v-if="quarterlyTasks.length > 0">
                 <div class="flex items-center justify-between">
                     <h3 class="text-lg font-semibold text-gray-200">Quarterly Tasks</h3>
+                    <button class="text-blue-500 mr-3" @click="showQuarterlyTasks = !showQuarterlyTasks">
+                        <i class="fas" :class="{'fa-angle-double-down': !showQuarterlyTasks, 'fa-angle-double-up': showQuarterlyTasks}"></i>
+                    </button>
                 </div>
-                <daily-tasks
-                    v-for="(task, index) in quarterlyTasks"
-                    :index="index"
-                    :key="task.id"
-                    :task="task"
-                    :userId="userId"
-                    :type="'quarterly'"
-                    v-on:taskChangedTF="changeTaskTimeframe"
-                    v-on:taskDeleted="removeTask"
-                ></daily-tasks>
+                <div v-if="showQuarterlyTasks">
+                    <daily-tasks
+                        v-for="(task, index) in quarterlyTasks"
+                        :index="index"
+                        :key="task.id"
+                        :task="task"
+                        :userId="userId"
+                        :type="'quarterly'"
+                        v-on:taskChangedTF="changeTaskTimeframe"
+                        v-on:taskDeleted="removeTask"
+                    ></daily-tasks>
+                </div>
             </div>
             <div v-if="yearlyTasks.length > 0">
                 <div class="flex items-center justify-between">
                     <h3 class="text-lg font-semibold text-gray-200">Yearly Tasks</h3>
+                    <button class="text-blue-500 mr-3" @click="showYearlyTasks = !showYearlyTasks">
+                        <i class="fas" :class="{'fa-angle-double-down': !showYearlyTasks, 'fa-angle-double-up': showYearlyTasks}"></i>
+                    </button>
                 </div>
-                <daily-tasks
-                    v-for="(task, index) in yearlyTasks"
-                    :index="index"
-                    :key="task.id"
-                    :task="task"
-                    :userId="userId"
-                    :type="'yearly'"
-                    v-on:taskChangedTF="changeTaskTimeframe"
-                    v-on:taskDeleted="removeTask"
-                ></daily-tasks>
+                <div v-if="showYearlyTasks">
+                    <daily-tasks
+                        v-for="(task, index) in yearlyTasks"
+                        :index="index"
+                        :key="task.id"
+                        :task="task"
+                        :userId="userId"
+                        :type="'yearly'"
+                        v-on:taskChangedTF="changeTaskTimeframe"
+                        v-on:taskDeleted="removeTask"
+                    ></daily-tasks>
+                </div>
             </div>
             <div class="flex items-center justify-between">
                 <h3 class="text-lg font-semibold text-gray-200">Tasks</h3>
@@ -143,7 +168,7 @@
                     <i class="fas fa-plus-circle"></i>
                 </button> -->
             </div>
-            <div class="flex items-center justify-between space-x-2 px-4 py-2 bg-gray-600 origin-top" v-for="(task, index) in tasks" :key="task.id">
+            <div class="flex items-center justify-between space-x-2 px-4 py-2 bg-gray-600 origin-top" :ref="`task-${task.id}`" v-for="(task, index) in tasks" :key="task.id">
                 <task 
                     :id="task.id" 
                     :index="parseInt(index)" 
@@ -151,6 +176,7 @@
                     :status="parseInt(task.status)" 
                     v-on:updateTask="updateTaskStatus" 
                     v-on:editTask="editThisTask"
+                    v-on:taskAlreadyActive="warnOfActiveTask()"
                     :userId="userId"
                 ></task>
                 <button v-if="task.status != 1" class="text-red-500 w-8 h-8 bg-gray-800 hover:bg-gray-700 rounded-full" @click="confirmDeleteTask(task.id, index)">
@@ -192,6 +218,11 @@ export default {
             recurringTasks: [],
             timeframes: ['daily', 'weekly', 'monthly', 'quarterly', 'yearly'],
             disabled: false,
+            showDailyTasks: false,
+            showWeeklyTasks: false,
+            showMonthlyTasks: false,
+            showQuarterlyTasks: false,
+            showYearlyTasks: false,
         }
     },
     props: {
@@ -205,11 +236,24 @@ export default {
     },
     created(){
         this.fetchProjects();
-        
         this.fetchRecurringDailyTasks();
-       
     },
     methods: {
+        async warnOfActiveTask(){
+            let activeTask = await localforage.getItem('activeTask');
+            //let activeTaskType = await localforage.getItem('activeTaskType');
+            console.log(activeTask);
+            this.$refs[`task-${activeTask}`].classList.add('border');
+            this.$refs[`task-${activeTask}`].classList.add('border-red-500');
+            this.$refs[`task-${activeTask}`].classList.remove('bg-gray-600');
+            this.$refs[`task-${activeTask}`].classList.add('bg-red-500');
+            setTimeout(() => {
+                this.$refs[`task-${activeTask}`].classList.remove('border');
+                this.$refs[`task-${activeTask}`].classList.remove('border-red-500');
+                this.$refs[`task-${activeTask}`].classList.remove('bg-red-500');
+                this.$refs[`task-${activeTask}`].classList.add('bg-gray-600');
+            }, 5000);
+        },
         changeTaskTimeframe(payload){
             console.log(payload);
             switch(payload.timeframe){

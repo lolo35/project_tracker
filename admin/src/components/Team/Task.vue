@@ -21,6 +21,8 @@
 <script>
 import localforage from 'localforage';
 import axios from 'axios';
+import Swal from 'sweetalert2';
+
 export default {
     name: "Task",
     data(){
@@ -36,9 +38,12 @@ export default {
         userId: Number,
         index: Number,
     },
-    emits: ['updateTask', 'editTask'],
+    emits: ['updateTask', 'editTask', 'taskAlreadyActive'],
     created(){
         this.checkStatus();
+        setInterval(() => {
+            this.checkStatus();
+        }, 2000);
     },
     methods: {
         async editTaskDescription(){
@@ -66,6 +71,7 @@ export default {
                 if(response.data.success){
                     this.$emit('updateTask', this.id);
                     localforage.removeItem(this.id.toString());
+                    localforage.removeItem('activeTask');
                 }
             } catch(error){
                 console.error(error);
@@ -75,24 +81,86 @@ export default {
         async toggleActive(){
             let formData = new FormData();
             formData.append('taskId', this.id);
-            if(!this.activeStatus){
+            let checkForActive = await localforage.getItem('activeTask');
+            if(checkForActive === null || checkForActive === this.id){
+                if(!this.activeStatus){
                 localforage.setItem(this.id.toString(), true);
                 this.activeStatus = true;
                 formData.append('status_id', -4);
+                localforage.setItem('activeTask', this.id);
+                localforage.setItem('activeTaskType', 'project');
 
+                }else{
+                    localforage.setItem(this.id.toString(), false);
+                    this.activeStatus = false;
+                    formData.append('status_id', -5);
+                    localforage.removeItem('activeTask');
+                    localforage.removeItem('activeTaskType');
+                }
+                const response = await axios.post(`${this.$store.state.url}user/toggleTask`, formData, { headers: { 'Content-type': 'application/x-www-form-urlencoded' }});
+                console.log(response.data);
             }else{
-                localforage.setItem(this.id.toString(), false);
-                this.activeStatus = false;
-                formData.append('status_id', -5);
+                this.$emit('taskAlreadyActive');
+                Swal.fire({
+                    icon: 'warning',
+                    text: 'You already have a running task, would you like to pause it and start your next task?',
+                    confirmButtonText: "Yes",
+                    showCancelButton: true,
+                    cancelButtonColor: "red"
+                }).then(async (isConfirmed) => {
+                    if(isConfirmed.value){
+                        let task = await localforage.getItem('activeTask');
+                        let taskType = await localforage.getItem('activeTaskType');
+                        if(taskType === "reccurring"){
+                            let formData = new FormData();
+                            formData.append('taskId', task);
+                            formData.append('status_id', -5);
+                            localforage.removeItem('activeTask');
+                            const response = await axios.post(`${this.$store.state.url}recurring/activateTask`, formData, { headers: { 'Content-type': 'application/x-www-form-urlencoded'}});
+                            if(response.data.success){
+                                localforage.setItem(`recurringTask-${task}`, false);
+                                let formData = new FormData();
+                                formData.append('taskId', this.id);
+                                formData.append('status_id', -4);
+                                const response = await axios.post(`${this.$store.state.url}user/toggleTask`, formData, { headers: { 'Content-type': 'application/x-www-form-urlencoded' }});
+                                if(response.data.success){
+                                    localforage.setItem('activeTask', this.id);
+                                    localforage.setItem('activeTaskType', 'project');
+                                    this.activeStatus = !this.activeStatus;
+                                    localforage.setItem(`recurringTask-${task}`, false);
+                                    localforage.setItem(this.id.toString(), true);
+                                }
+                            }
+                        }else if(taskType === "project"){
+                            let formData = new FormData();
+                            formData.append('taskId', task);
+                            formData.append('status_id', -5);
+                            localforage.removeItem('activeTask');
+                            const response = await axios.post(`${this.$store.state.url}user/toggleTask`, formData, { headers: { 'Content-type': 'application/x-www-form-urlencoded' }});
+                            if(response.data.success){
+                                localforage.setItem(`recurringTask-${task}`, false);
+                                let formData = new FormData();
+                                formData.append('taskId', this.id);
+                                formData.append('status_id', -4);
+                                const response = await axios.post(`${this.$store.state.url}user/toggleTask`, formData, { headers: { 'Content-type': 'application/x-www-form-urlencoded' }});
+                                if(response.data.success){
+                                    localforage.setItem('activeTask', this.id);
+                                    localforage.setItem('activeTaskType', 'project');
+                                    this.activeStatus = !this.activeStatus;
+                                    localforage.setItem(this.id.toString(), true);
+                                }
+                            }
+                        }
+                    }
+                });
             }
-
-            const response = await axios.post(`${this.$store.state.url}user/toggleTask`, formData, { headers: { 'Content-type': 'application/x-www-form-urlencoded' }});
-            console.log(response.data);
         },
         checkStatus(){
             localforage.getItem(this.id.toString()).then(value => {
                 if(value){
                     this.activeStatus = value;
+                }else{
+                    this.activeStatus = false;
                 }
             });
         }

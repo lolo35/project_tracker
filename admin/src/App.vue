@@ -9,6 +9,7 @@ export default {
 	name: "App",
 	created(){
 		this.checkIfLogged();
+		this.setUrl();
 	},
 	methods: {
 		checkIfLogged(){
@@ -32,6 +33,13 @@ export default {
 						this.$store.dispatch('user/setUserLoaded', true);
 					}
 				});
+			}
+		},
+		setUrl(){
+			if(process.env.NODE_ENV === "development"){
+				this.$store.dispatch('setUrl', "http://localhost/lumen/project_mgmt/public/");
+			}else {
+				this.$store.dispatch('setUrl', "http://artl-app04/timely/api/public/");
 			}
 		}
 	}

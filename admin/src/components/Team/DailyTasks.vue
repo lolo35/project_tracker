@@ -39,6 +39,7 @@
 <script>
 import axios from 'axios';
 import localforage from 'localforage';
+import Swal from 'sweetalert2';
 
 export default {
     name: "DailyTasks",
@@ -54,15 +55,20 @@ export default {
         index: Number,
         type: String,
     },
-    emits: ['taskDeleted', 'taskChangedTF'],
+    emits: ['taskDeleted', 'taskChangedTF', 'taskAlreadyActive'],
     created(){
         this.checkStatus();
+        setInterval(() => {
+            this.checkStatus();
+        }, 2000);
     },
     methods: {
         async checkStatus(){
             const status = await localforage.getItem(`recurringTask-${this.task.id}`);
             if(status){
                 this.activeStatus = true;
+            }else{
+                this.activeStatus = false;
             }
         },
         async deleteTask(){
@@ -81,18 +87,77 @@ export default {
         async toggleActive(){
             let formData = new FormData();
             formData.append('taskId', this.task.id);
-            if(!this.activeStatus){
-                formData.append('status_id', -4);
-            }
-            if(this.activeStatus){
-                formData.append('status_id', -5);
-            }
-            const response = await axios.post(`${this.$store.state.url}recurring/activateTask`, formData, { headers: { 'Content-type': 'application/x-www-form-urlencoded'}});
-            if(response.data.success){
-                this.activeStatus = !this.activeStatus;
-                localforage.setItem(`recurringTask-${this.task.id}`, this.activeStatus);
+            let checkForActive = await localforage.getItem('activeTask');
+            if(checkForActive === null || checkForActive === this.task.id){
+                if(!this.activeStatus){
+                    formData.append('status_id', -4);
+                    localforage.setItem('activeTask', this.task.id);
+                    localforage.setItem('activeTaskType', 'reccurring');
+                }
+                if(this.activeStatus){
+                    formData.append('status_id', -5);
+                    localforage.removeItem('activeTask');
+                    localforage.removeItem('activeTaskType');
+                }
+                const response = await axios.post(`${this.$store.state.url}recurring/activateTask`, formData, { headers: { 'Content-type': 'application/x-www-form-urlencoded'}});
+                if(response.data.success){
+                    this.activeStatus = !this.activeStatus;
+                    localforage.setItem(`recurringTask-${this.task.id}`, this.activeStatus);
+                }else{
+                    console.log(response.data);
+                }
             }else{
-                console.log(response.data);
+                Swal.fire({
+                    icon: 'warning',
+                    text: 'You already have a running task, would you like to pause it and start your next task?',
+                    confirmButtonText: "Yes",
+                    showCancelButton: true,
+                    cancelButtonColor: "red"
+                }).then(async (isConfirmed) => {
+                    if(isConfirmed.value){
+                        let task = await localforage.getItem('activeTask');
+                        let taskType = await localforage.getItem('activeTaskType');
+                        if(taskType === "reccurring"){
+                            let formData = new FormData();
+                            formData.append('taskId', task);
+                            formData.append('status_id', -5);
+                            localforage.removeItem('activeTask');
+                            const response = await axios.post(`${this.$store.state.url}recurring/activateTask`, formData, { headers: { 'Content-type': 'application/x-www-form-urlencoded'}});
+                            if(response.data.success){
+                                localforage.setItem(`recurringTask-${task}`, false);
+                                let formData = new FormData();
+                                formData.append('taskId', this.task.id);
+                                formData.append('status_id', -4);
+                                const response = await axios.post(`${this.$store.state.url}recurring/activateTask`, formData, { headers: { 'Content-type': 'application/x-www-form-urlencoded'}});
+                                if(response.data.success){
+                                    localforage.setItem('activeTask', this.task.id);
+                                    localforage.setItem('activeTaskType', 'reccurring');
+                                    this.activeStatus = !this.activeStatus;
+                                    localforage.setItem(`recurringTask-${this.task.id}`, this.activeStatus);
+                                }
+                            }
+                        }else if(taskType === "project"){
+                            let formData = new FormData();
+                            formData.append('taskId', task);
+                            formData.append('status_id', -5);
+                            localforage.removeItem('activeTask');
+                            const response = await axios.post(`${this.$store.state.url}user/toggleTask`, formData, { headers: { 'Content-type': 'application/x-www-form-urlencoded' }});
+                            if(response.data.success){
+                                localforage.setItem(task.toString(), false);
+                                let formData = new FormData();
+                                formData.append('taskId', this.task.id);
+                                formData.append('status_id', -4);
+                                const response = await axios.post(`${this.$store.state.url}recurring/activateTask`, formData, { headers: { 'Content-type': 'application/x-www-form-urlencoded'}});
+                                if(response.data.success){
+                                    localforage.setItem('activeTask', this.task.id);
+                                    localforage.setItem('activeTaskType', 'reccurring');
+                                    this.activeStatus = !this.activeStatus;
+                                    localforage.setItem(`recurringTask-${this.task.id}`, this.activeStatus);
+                                }
+                            }
+                        }
+                    }
+                });
             }
             
         },
