@@ -170,6 +170,8 @@ export default {
                 if(response.data.success){
                     this.$emit('taskDeleted', {type: this.type, index: this.index});
                     localforage.removeItem(`recurringTask-${this.task.id}`);
+                    localforage.removeItem(`activeTask`);
+                    localforage.removeItem('activeTaskType');
                 }else{
                     console.log(response.data);
                 }

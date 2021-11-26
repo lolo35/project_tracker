@@ -72,6 +72,7 @@ export default {
                     this.$emit('updateTask', this.id);
                     localforage.removeItem(this.id.toString());
                     localforage.removeItem('activeTask');
+                    localforage.removeItem('activeTaskType');
                 }
             } catch(error){
                 console.error(error);
